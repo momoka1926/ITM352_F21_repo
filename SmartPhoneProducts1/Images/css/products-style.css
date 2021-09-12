@@ -1,0 +1,38 @@
+/* General */ 
+body {
+    width: 800px;
+    margin: 0 auto;
+    }
+
+/* Typography */ 
+  h1 {
+    text-align: center;
+  }
+  h2 {
+    text-align: center;
+  }
+
+/* block styling */ 
+  div {
+    border: 5px solid black;
+    display: flex;
+    }
+
+/* Form styling */
+  main {
+    display: flex;
+    flex-flow: row wrap;
+    justify-content: space-around;
+    }
+
+/* Styling the products display */ 
+img {
+    height: 200px;
+    width: 200px;
+    }  
+
+div{
+    background-image: url(/Users/momoka/Documents/GitHub/ITM352_F21_repo/Lab2/SmartPhoneProducts1/Images/Picture1.png);
+    background-repeat: no-repeat;
+    background-size: cover;
+    }
