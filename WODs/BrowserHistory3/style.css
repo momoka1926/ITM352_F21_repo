@@ -3,7 +3,7 @@ h1, h2{
 }
 
 ul{
-    list-style-type: none;
+    list-style: none;
     margin: 0;
     padding: 0;
 }
@@ -14,13 +14,13 @@ li{
 
 #navbar a{
     margin-left: 75px;
-    margin-right: 75px;
+    margin-left: 75px;
 }
 
 body{
     font-family: Open Sans;
     color: darkblue;
-    margin: 10px 50px 10px 50px;
+    margin: 10px 50px 10pc 50px;
     width: 950px;
     background: ivory;
 }
