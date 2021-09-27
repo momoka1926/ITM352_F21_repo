@@ -84,32 +84,33 @@
     <tbody> 
         <table border="1" style="margin-left: auto; margin-right: auto; text-align: center;">
 
-         <script>
-             var line = 1;
-             var now = new Date();
-            document.write(` 
-        <tr>
-            <th colspan="2"><h1>Your One Stop For Used Phones - ${first_name[0]}.${last_name[0]}.'s</h1></th>
-        </tr>
-         
-        <tr>
-            <td> ${line ++}</td>
-            <td><br/><string> @ ${first_name} ${""} ${last_name} </td>
-        </tr>
-        
-        <tr>
-            <td> ${line ++}</td>
-            <td> ${innerHTML = now.getFullYear()}</td>
-        </tr>
-       
-        <tr>
-            <td> ${line ++}</td>
-            <td> ${innerHTML = now.getHours() + 11 % 12 + 1}
-                 ${innerHTML = now.getHours() < 12 ? 'AM' : 'PM'}
-                </td>
-        </tr>
-        `);
-         </script>
+            <script>
+                var line = 1;
+                var now = new Date();
+                var date = ((now.getHours() + 11) % 12 + 1)+':'+now.getMinutes();
+                var ampm = now.getHours() < 12? 'AM':'PM';
+                document.write(` 
+           <tr>
+               <th colspan="2"><h1>Your One Stop For Used Phones - ${first_name[0]}.${last_name[0]}.'s</h1></th>
+           </tr>
+            
+           <tr>
+               <td> ${line ++}</td>
+               <td><br/><string> @ ${first_name} ${""} ${last_name} </td>
+           </tr>
+           
+           <tr>
+               <td> ${line ++}</td>
+               <td> ${innerHTML = now.getFullYear()}</td>
+           </tr>
+          
+           <tr>
+               <td> ${line ++}</td>
+               <td> ${date + " " + ampm}
+               </td>
+           </tr>
+           `);
+            </script>
         </table> 
         
        
