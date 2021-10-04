@@ -1,6 +1,6 @@
 console.log("Product variables loaded...");
-
-var name1 = "HTC";
+     num_items = 5;
+     var name1 = "HTC";
      var price1 = 40.00;
      var image1 = "http://dport96.github.io/ITM352/morea/080.flow-control-II/HTC.jpg";
 
@@ -19,3 +19,5 @@ var name1 = "HTC";
      var name5 = "Blackberry";
      var price5 = 10.00;
      var image5 = "http://dport96.github.io/ITM352/morea/080.flow-control-II/Blackberry.jpg";
+
+
