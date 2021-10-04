@@ -13,15 +13,15 @@
     <h1>Used Smart Phone Store</h1>
     <div><main>
         <script>
+            num_items = 5;
             for (i = 1; i <= num_items; i++) {
-            document.write(`
-        <section class="item" onmouseover="this.className='item rotate';" onclick="this.className='item';"> 
+        document.write(`
+        <section class="item" onmouseover="this.className='item rotate';" onclick="this.className='item';">
             <h2>${eval('name' + i)}</h2> 
-            <p>${eval('price' + i)}</p> 
-            <img id="${eval('image' + i)}">
+            <p>${eval('price' + i)}</p>
+            <img src ="${eval('image' + i)}">
         </section>
-        
-        `); 
+    `);
     }
         </script>
 </main></div>
