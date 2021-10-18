@@ -48,5 +48,10 @@ for(let i in products){
 </table>
 <input type="button" value="Add new row"
   onclick="
-  prodTableBody.insertRow(prodTableBody.rows.length +1);
+    prodTableBody.insertRow(prodTableBody.rows.length);
+  new_row = this.appendChild(document.createElement('tr'));
+  for(i=1; i<=this.rows[0].cells.length; i++){
+    new_cell = new_row.appendChild(document.createElement('td'))
+    new_cell.innerHTML = 'xxx';
+  }
   "> 
