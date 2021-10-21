@@ -1,33 +1,23 @@
 <script src="products_data.js">
-  /* This is a invoice. */
-
+  /* This is a invoice. */ 
 </script>
 <script>
-  var quantities = [-1,1.1,'cat',0,5];
+  var quantities = [1,0,3,0,5];
 
   function generate_item_rows(product_quantities_array){
     for(i in products){
-        // Product 
+        // Product 1
         if(product_quantities_array[i] == 0) continue;
-        errors = isNonNegInt(product_quantities_array[i], true);
-        extended_price = products[i].price * quantities[i];
+        extended_price = products[i].price * product_quantities_array[i];
         subtotal = subtotal + extended_price;
         document.write(`
       <tr>
         <td width="43%">${products[i].brand}</td>
-        <td align="center" width="11%">${product_quantities_array[i]}<br>${errors.join('<br>')}</td>
+        <td align="center" width="11%">${product_quantities_array[i]}</td>
         <td width="13%">$${products[i].price}</td>
         <td width="54%">$${extended_price}</td>
       </tr>`);
     }
-  }
-
-  function isNonNegInt(val, returnErrors=false) {
-    errors = [];
-    if(Number(val) != val) errors.push('Not a number!');
-    if(val < 0) errors.push('Negative value!');
-    if(parseInt(val) != val) errors.push('Not an integer!');
-    return returnErrors ? erros : ((errors.length > 0)? false:true)
   }
 </script>
 <!DOCTYPE html>
@@ -70,7 +60,6 @@
 
      // Compute total
      var total = subtotal + tax + shipping;
-
       </script>
       <tr>
         <td colspan="4" width="100%">&nbsp;</td>
@@ -81,15 +70,15 @@
       </tr>
       <tr>
         <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 5.75%</span></td>
-        <td width="54%">$<script>document.write(tax)</script></td>
+        <td width="54%">$<script>document.write(tax.toFixed(2))</script></td>
       </tr>
       <tr>
         <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Shipping</span></td>
-        <td width="54%">$<script>document.write(shipping)</script></td>
+        <td width="54%">$<script>document.write(shipping.toFixed(2))</script></td>
       </tr>
       <tr>
         <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
-        <td width="54%"><strong>$<script>document.write(total)</script></strong></td>
+        <td width="54%"><strong>$<script>document.write(total.toFixed(2))</script></strong></td>
       </tr>
     </tbody>
   </table>
