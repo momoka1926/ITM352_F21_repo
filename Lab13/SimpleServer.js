@@ -1,7 +1,7 @@
 var http = require('http');
 
 //create a server object:
-http.createServer(function (req, res) {
+http.createServer(function (req, res) {//req=what the request was, res=allowed me to respond whoever made the request
     console.log(req.headers); //output the request headers to the console
     res.writeHead(200, { 'Content-Type': 'text/html' }); // set MIME type to HTML 
     res.write(`<h1>The server date is: ${Date.now()}</h1>`); //send a response to the client
