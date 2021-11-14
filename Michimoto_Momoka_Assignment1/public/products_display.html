@@ -33,12 +33,20 @@
     ];
 </script>
 
+<script>
+    let params = (new URL(document.location)).searchParams;
+</script>
+
+ <!-- Uses W3 Pizza Restaurant Template -->
 <!DOCTYPE html>
+<script src="./products.js" type="text/javascript"></script>
 <html lang="en">
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1">
 <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
 <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&display=swap">
+
+
 
 <style>
     body,
@@ -63,7 +71,7 @@
     .bgimg {
         background-repeat: no-repeat;
         background-size: cover;
-        background-image: url("/Michimoto_Momoka_Assignment1/images/Background.jpg");
+        background-image: url("./images/Background.jpg");
         min-height: 90%;
     }
 
@@ -110,32 +118,39 @@
     <!-- Menu Container -->
     <body>
         <h1 id='menu'>
-
+        
             <br>
-            <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Fresh JSeafood store</h1>
-            <div>
-                <main>
-                    <script>
-                        //get products name, price, and image through loop
-                        //make this in loop not to make the code complexed
-                        for (i = 0; i < products.length; i++) {
-                            document.write(`
-            <section class="item">
-                <h2><span class="w3-center w3-tag w3-dark-grey w3-round"><b>${products[i].name}</b></h2>
+            <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Fresh JSeafood Store</h1>
+            <form action="./process_form" method="POST"> 
+            <!-- the server is going to post the form to process_form -->
+                <div>
+                    <main>
+                        <script>
+                            //get products name, price, and image through loop
+                            //make this in loop not to make the code complexed
+                            for (i = 0; i < products.length; i++) {
+                                document.write(`
+                <section class="item">
+                    <h2><span class="w3-center w3-tag w3-dark-grey w3-round"><b>${products[i].name}</b></h2>
+                
+                    <p><span class="w3-left w3-tag w3-dark-grey w3-round">$${products[i].price}</span></p>
+                    
+                    <input type="number" min="0" max="10" value=0 name="quantity">
+                    
+                    <div class="img_wrap">
+                    <img src="./images/${products[i].image}"></div>
+                </section>
+                    `);
+                        }
+                        </script>
+                    </main>
+                </div>
+                
+                <!-- purchase button -->
+                <input type="submit" value="PURCHASE">
 
-                <p><span class="w3-left w3-tag w3-dark-grey w3-round">$${products[i].price}</span></p>
-                
-                <input type="text" value=0> 
-                <input name="purchase_submit_button" type="submit" value="Purchase">
-                
-                <div class="img_wrap">
-                <img src="./images/${products[i].image}"></div>
-            </section>
-                `);
-                    }
-                    </script>
-                </main>
-            </div>
+            </form>
+            
 
             <!-- About Container -->
             <div class="w3-container w3-padding-64 w3-red w3-grayscale w3-xlarge" id="about">
@@ -147,17 +162,15 @@
                     <div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xlarge" id="contact">
                         <div class="w3-content">
                             <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Contact</h1>
-                            <p>Find us at some address at some place or call us at 046192-200126</p>
-                            <p><span class="w3-tag">FYI!</span> We offer full-service catering for any event, large or
-                                small. We understand your needs and we will cater the food to satisfy the biggerst
-                                criteria of them all, both look and taste.</p>
+                            <p>Find us across the street from Don Quijote Honolulu or call us at 808-732-3663</p>
+                            <p><span class="w3-tag">FYI!</span>In addition, to what's available online.  We also offer full-service catering for any event, large or small.  
+                                We understand your needs and we will cater the food to satisfy the biggest criteria of them all - presentation and taste.
+                                </p>
                             <form action="/action_page.php" target="_blank">
                                 <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name"
                                         required name="Name"></p>
-                                <p><input class="w3-input w3-padding-16 w3-border" type="number"
-                                        placeholder="How many people" required name="People"></p>
-                                <p><input class="w3-input w3-padding-16 w3-border" type="datetime-local"
-                                        placeholder="Date and time" required name="date" value="2020-11-16T20:00"></p>
+                                <p><input class="w3-input w3-padding-16 w3-border" for="email"
+                                        placeholder="john@example.com" required name="email"></p>
                                 <p><input class="w3-input w3-padding-16 w3-border" type="text"
                                         placeholder="Message \ Special requirements" required name="Message"></p>
                                 <p><button class="w3-button w3-light-grey w3-block" type="submit">SEND US
@@ -187,7 +200,7 @@
                             document.getElementById(menuName).style.display = "block";
                             evt.currentTarget.firstElementChild.className += " w3-red";
                         }
-                        document.getElementById("myLink").click();
+                        // document.getElementById("myLink").click();
                     </script>
 
     </body>

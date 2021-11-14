@@ -44,6 +44,7 @@
   };
 
   function generate_item_rows(product_quantities_array) {
+    // function generate_item_rows(products_array, quantities) {
     //Loop the table rows thorough the following conditions
     for (i in products) {
       if (quantities[i] == 0) continue; 
@@ -71,7 +72,8 @@
     }
   }
 
-  var quantities = [1,-1,2.5,2,'dog'];
+  var quantities = [1,2,2,3,4];
+  
 </script>
 
 <!DOCTYPE html>
@@ -83,6 +85,8 @@
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
 </head>
+
+<!-- following codes are from WODs invoice 4  -->
 
 <body>
   <table border="2">
@@ -98,7 +102,7 @@
         generate_item_rows(quantities);
 
         // Compute sales tax
-        var tax_rate = 0.0575;
+        var tax_rate = 0.043;
         var tax = tax_rate * subtotal;
 
         // Compute shipping
@@ -127,10 +131,10 @@
         </td>
       </tr>
       <tr>
-        <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 5.75%</span>
+        <td style="text-align: center;" colspan="3" width="67%"><span style="font-family: arial;">Tax @ 4.3%</span>
         </td>
         <td width="54%">$
-          <script>document.write(tax)</script>
+          <script>document.write(tax.toFixed(2))</script>
         </td>
       </tr>
       <tr>
