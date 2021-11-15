@@ -1,3 +1,4 @@
+//took this from SmartPhonenames3//
 var products = [
     {
         "name": "Hokkaido Kegani Crab",
