@@ -1,4 +1,4 @@
-var products_array = require('./products');
+var products_array = require('./public/products.js');
 var express = require('express');
 var app = express();
 
