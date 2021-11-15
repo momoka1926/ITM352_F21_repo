@@ -1,0 +1,42 @@
+body,
+html {
+    height: 100%
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Zen Antique Soft', serif;
+}
+
+.menu {
+    display: none
+}
+
+.bgimg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("./images/Background.jpg");
+    min-height: 90%;
+}
+
+.img_wrap{
+border: 1px solid #ddd;
+width: 400px;
+height: 226px;
+margin: 20px auto 0;
+transition-duration: 0.5s;
+}
+.img_wrap img{
+width: 100%;
+cursor: pointer;
+}
+.img_wrap:hover{
+box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
+transform: translateY(-10px);
+transition-duration: 0.5s;
+}
