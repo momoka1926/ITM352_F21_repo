@@ -1,9 +1,8 @@
 <script src="./products.js" type="text/javascript"></script>
 <script>
   //referenced from assignment 1 examples
-  let params = (new URL(document.location)).searchParams; //takes data from query called submitPurchase, if it has it then it looks for the quantities 
+  let params = (new URL(document.location)).searchParams; //takes data from query strings
   var quantities = [];
-  // processing the invoice to create the form from the data entered
   if (params.has('submitPurchase')) { // looping based on the following condition
     for (i = 0; i < products.length; i++) {
       if (params.has(`quantity${i}`)) {
