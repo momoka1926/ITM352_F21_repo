@@ -28,7 +28,7 @@ app.post('/process_form', function (request, response, next) {
     let brand_price = products[0]['price'];
 
     console.log(request.body);
-    var q = request.body['quantity_textbox'];//get the value
+    var q = request.body['quantity_textbox'];//get the  value
     if (typeof q != 'undefined') {
         // if idon't have value it's not gonna respose 
         if (isNonNegInt(q)) {

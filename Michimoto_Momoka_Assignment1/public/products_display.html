@@ -3,7 +3,7 @@
 <script>
     function isNonNegInt(q, return_errors = false) {
         errors = []; // assume no errors at first
-        if(q == '') q =0; // handle blank inputs as if they are 0
+        if (q == '') q = 0; // handle blank inputs as if they are 0
         if (Number(q) != q) errors.push('<font color="red">Not a number!</font>'); // Check if string is a number value
         else if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if it is non-negative
         else if (parseInt(q) != q) errors.push('<font color="red">Not an integer!</font>'); // Check that it is an integer
@@ -28,18 +28,18 @@
                     a_qty = params.get(`quantity${i}`);
                     // make textboxes sticky in case of invalid data
                     product_selection_form[`quantity${i}`].value = a_qty;
-                    total_qty += a_qty; 
-                    if(!isNonNegInt(a_qty)) {
+                    total_qty += a_qty;
+                    if (!isNonNegInt(a_qty)) {
                         has_errors = true; // oops, invalid quantity
                         checkQuantityTextbox(product_selection_form[`quantity${i}`]); // show where the error is
                     }
                 }
             }
             // Now respond to errors or redirect to invoice if all is ok
-            if(has_errors) {
-                alert("Please enter only valid quantities!");
-            } else if(total_qty == 0) { // no quantity selections, just give a general alert
-                alert("Please select some quantities!");
+            if (has_errors) {
+                alert("Please enter only valid quantities");
+            } else if (total_qty == 0) { // no quantity selections, just give a general alert
+                alert("Please select some quantities");
             } else { // all good to go!
                 window.location = `./invoice.html${document.location.search}`;
                 window.stop;
@@ -48,20 +48,24 @@
     }
 </script>
 
- <!-- Uses W3 Pizza Restaurant Template -->
+<!-- Uses W3 Pizza Restaurant Template -->
 <!DOCTYPE html>
 <html lang="en">
+
 <head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width, initial-scale=1">
-<!-- <base href="/"> -->
-<link rel="stylesheet" href="products-style.css">
-<link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
-<link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&display=swap">
-<title>Fresh JSeafood Stored</title>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <!-- <base href="/"> -->
+    <link rel="stylesheet" href="products-style.css">
+    <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css">
+    <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&display=swap">
+    <title>Fresh JSeafood Stored</title>
 </head>
 
 <body>
+    <script>
+       document.write(`<h3>${products[0]["brand"]} at \$${products[0]["price"]}</h3>`);
+    </script>
 
     <!-- Navbar (sit on top) -->
     <div class="w3-top w3-hide-small">
@@ -77,19 +81,22 @@
     <header class="bgimg w3-display-container w3-grayscale-min" id="home">
         <div class="w3-display-middle w3-center">
             <span class="w3-text-white w3-hide-small" style="font-size:100px">Fresh<br>Japanese Seafood</span>
-            <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>fresh<br>Japanese Seafood</b></span>
+            <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>fresh<br>Japanese
+                    Seafood</b></span>
             <p><a href="#menu" class="w3-button w3-xxlarge w3-white">Let me see the menu</a></p>
         </div>
     </header>
 
     <!-- Menu Container -->
+
     <body>
         <h1 id='menu'>
-        
+
             <br>
             <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Fresh JSeafood Store</h1>
-            <form action="./process_form" method="POST"> 
-            <!-- the server is going to post the form to process_form -->
+            <form action="./process_form" 
+            method="POST">
+                <!-- the server is going to post the form to process_form -->
                 <div>
                     <main>
                         <script>
@@ -108,31 +115,35 @@
                     <img src="./images/${products[i].image}"></div>
                 </section>
                     `);
-                        }
+                            }
                         </script>
                     </main>
                 </div>
-                
+
                 <!-- purchase button -->
                 <input type="submit" value="PURCHASE">
 
+                
             </form>
-            
 
             <!-- About Container -->
             <div class="w3-container w3-padding-64 w3-red w3-grayscale w3-xlarge" id="about">
                 <div class="w3-content">
                     <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">About</h1>
-                    <p>Fresh JSeafood store is a online market. We carry select seafood. Many people love ordering our product to enjoy fresh seafood at the home. Check out the fresh seafood flown directly from Japan to you door and cook like a chef at home.</p>
+                    <p>Fresh JSeafood store is a online market. We carry select seafood. Many people love ordering our
+                        product to enjoy fresh seafood at the home. Check out the fresh seafood flown directly from
+                        Japan to you door and cook like a chef at home.</p>
 
                     <!-- Contact -->
                     <div class="w3-container w3-padding-64 w3-blue-grey w3-grayscale-min w3-xlarge" id="contact">
                         <div class="w3-content">
                             <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Contact</h1>
                             <p>Find us across the street from Don Quijote Honolulu or call us at 808-732-3663</p>
-                            <p><span class="w3-tag">FYI!</span>In addition, to what's available online.  We also offer full-service catering for any event, large or small.  
-                                We understand your needs and we will cater the food to satisfy the biggest criteria of them all - presentation and taste.
-                                </p>
+                            <p><span class="w3-tag">FYI!</span>In addition, to what's available online. We also offer
+                                full-service catering for any event, large or small.
+                                We understand your needs and we will cater the food to satisfy the biggest criteria of
+                                them all - presentation and taste.
+                            </p>
                             <form action="/action_page.php" target="_blank">
                                 <p><input class="w3-input w3-padding-16 w3-border" type="text" placeholder="Name"
                                         required name="Name"></p>
