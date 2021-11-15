@@ -19,11 +19,16 @@ app.post('/process_form', function (request, response) {
 });
 
 // process purchase request (validate quantities, check quantity available)
+// codes are from info_server_Ex5.js
 function isNonNegInt(q, returnErrors = false) {
     errors = []; // assume no errors
-    if (q < 0) errors.push('Negative Values'); //Check if the number is negative value
-    if (q > 10) errors.push('Invalid Values');
-    //Check if the numbr is less than 10
+    if (Number(q) != q) errors.push('Not a number!'); // Check if string is a number value
+    else {
+        if (q < 0) errors.push('Negative value!'); // Check if it is non-negative
+        if (q > 10) errors.push('Invalid Values'); //Check if the number is less than 10
+        if (parseInt(q) != q) errors.push('Not an integer!'); // Check that it is an integer
+    };
+
     return returnErrors ? errors : (errors.length == 0);
 }
 
