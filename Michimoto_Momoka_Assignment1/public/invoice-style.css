@@ -1,4 +1,8 @@
-/* used in voice template from bootdey.com */
+/* 
+Momoka Michimoto
+This page designed invoice.
+Copied invoice template from bootdey.com 
+*/
 
 /* -------------------------------------
     BODY & CONTAINER
@@ -53,6 +57,7 @@ h1, h2, h3 {
     margin: 40px 0 0;
     line-height: 1.2;
     font-weight: 400;
+    text-align: center;
 }
 
 h1 {

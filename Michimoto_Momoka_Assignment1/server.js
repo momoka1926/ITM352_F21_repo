@@ -1,7 +1,14 @@
-// referenced from Lab13 Ex4 and screen cast//
+/* 
+Momoka Michimoto
+This makes the server for my store.
+Checking the quantity.
+Code referenced from Lab13 Ex4 and screen cast.
+Professor Port helped me some codes.
+*/
+
 var products = require('./products.json');
 // set inital inventory 
-//products.forEach(function (i) {products[i].quantity_available=10});
+products.forEach((prod, i) => { prod.quantity_available = 10;});
 var express = require('express');
 var app = express();
 const qs = require('querystring');
@@ -29,19 +36,19 @@ app.post('/process_form', function (request, response) {
         if (isNonNegInt(quantities[i]) == false) {
             errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}`;
         }
-         // Check if any quanties were selected
+        // Check if any quanties were selected
         if (quantities[i] > 0) {
             has_quantities = true;
         }
         // Check if quantity desired is avaialble
-        if (quantities[i] > products[i].quantity_available == false) {
-            errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
+        if (quantities[i] > products[i].quantity_available ) {
+        errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
         }
-}
-        // Check if quantity is selected
-        if (!has_quantities) {
-            errors['no_quantities'] = `Please select some items!`;
-        }
+    }
+    // Check if quantity is selected
+    if (!has_quantities) {
+        errors['no_quantities'] = `Please select some items!`;
+    }
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
     console.log(Object.keys(errors));
@@ -77,11 +84,11 @@ app.listen(8080, () => console.log(`listening on port 8080`));
 // codes are referenced from info_server_Ex5.js
 function isNonNegInt(q, returnErrors = false) {
     errors = []; // assume no errors
-    if (q == '') { q = 0 } //blank means 0
-    if (Number(q) != q) errors.push('<font color="red">Not a number</font>'); // Check if string is a number value
-    if (Number(q) != q) errors.push('<font color="red">Not a number</font>'); //check if value is a number
-    if (q < 0) errors.push('<font color="red">Negative value!</font>'); // Check if it is non-negative
-    if (q > 10) errors.push('<font color="red">Invalid Values</font>'); //Check if the number is less than 10
+    if (q == '') q = 0  //blank means 0
+    if (Number(q) != q) errors.push('<font color="red">Not a number</font>');
+    //check if value is a number
+    if (q < 0) errors.push('<font color="red">Negative value</font>'); // Check if it is non-negative
+    if (q > 10) errors.push('<font color="red">Invalid Values</font>'); //Check if the number is available
     if (parseInt(q) != q) errors.push('<font color="red">Not an integer</font>'); // Check if it is an integer
 
     return returnErrors ? errors : (errors.length == 0);

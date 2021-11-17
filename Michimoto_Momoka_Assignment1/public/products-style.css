@@ -1,4 +1,8 @@
-/* Referenced W3 Pizza Restaurant Template */
+/* 
+Momoka Michimoto
+This page designed my order page.
+Referenced W3 Pizza Restaurant Template 
+*/
 
 body,
 html {
@@ -13,13 +17,14 @@ h4,
 h5,
 h6 {
     font-family: 'Zen Antique Soft', serif;
+    margin: 0px;
+	padding-top: 10px;
 }
 
 .menu {
     display: none
 
 }
-
 
 
 .bgimg {
@@ -53,6 +58,7 @@ display: table;
 .img_wrap img{
 width: 100%;
 cursor: pointer;
+display: table;
 }
 
 .img_wrap:hover{
@@ -60,3 +66,4 @@ box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
 transform: translateY(-10px);
 transition-duration: 0.5s;
 }
+
