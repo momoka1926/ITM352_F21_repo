@@ -7,7 +7,7 @@ app.use(express.urlencoded({ extended: true }));
 //And ask do I match? If I match, it excutes the function.
 
 app.post('/process_form', function (request, response, next) {
-    //request.body is gonna have the data from POST
+    //request.body is gonna have the data from POST in the form
     var q = request.body['quantity_textbox'/*name of the textbox*/]; //get the value and put it in q
     if (typeof q != 'undefined') { 
         // if idon't have value it's not gonna respose 
