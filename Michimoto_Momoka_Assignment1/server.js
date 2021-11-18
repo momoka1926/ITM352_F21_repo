@@ -8,7 +8,7 @@ Professor Port helped me some codes.
 
 var products = require('./products.json');
 // set inital inventory 
-products.forEach((prod, i) => { prod.quantity_available = 10;});
+products.forEach((prod, i) => { prod.quantity_available = 10; });
 var express = require('express');
 var app = express();
 const qs = require('querystring');
@@ -41,14 +41,14 @@ app.post('/process_form', function (request, response) {
             has_quantities = true;
         }
         // Check if quantity desired is avaialble
-        if (quantities[i] > products[i].quantity_available ) {
-        errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
+        if (quantities[i] > products[i].quantity_available) {
+            errors['available_' + i] = `We don't have ${(quantities[i])} ${products[i].name} available.`;
         }
     }
-    // Check if quantity is selected
-    if (!has_quantities) {
-        errors['no_quantities'] = `Please select some items!`;
-    }
+        // Check if quantity is selected
+        if (!has_quantities) {
+            errors['no_quantities'] = `Please select some items!`;
+         }
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
     console.log(Object.keys(errors));
@@ -74,8 +74,7 @@ app.get("/products.js", function (request, response, next) {
 });
 
 // route all other GET requests to files in public 
-app.use(express.static('./public'));
-//anytime it gets GET request, it's going to go in to the public directory and look for the path you said.  
+app.use(express.static('./public')); 
 
 // start server
 app.listen(8080, () => console.log(`listening on port 8080`));
@@ -88,7 +87,6 @@ function isNonNegInt(q, returnErrors = false) {
     if (Number(q) != q) errors.push('<font color="red">Not a number</font>');
     //check if value is a number
     if (q < 0) errors.push('<font color="red">Negative value</font>'); // Check if it is non-negative
-    if (q > 10) errors.push('<font color="red">Invalid Values</font>'); //Check if the number is available
     if (parseInt(q) != q) errors.push('<font color="red">Not an integer</font>'); // Check if it is an integer
 
     return returnErrors ? errors : (errors.length == 0);

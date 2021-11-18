@@ -16,7 +16,7 @@ h3,
 h4,
 h5,
 h6 {
-    font-family: 'Zen Antique Soft', serif;
+    font-family: 'Montserrat', sans-serif;
     margin: 0px;
 	padding-top: 10px;
 }
@@ -58,7 +58,7 @@ display: table;
 .img_wrap img{
 width: 100%;
 cursor: pointer;
-display: table;
+display: block;
 }
 
 .img_wrap:hover{
@@ -67,3 +67,23 @@ transform: translateY(-10px);
 transition-duration: 0.5s;
 }
 
+
+/* Button Template referecned from webparts.cman.jp*/
+.button {
+    display       : inline-block;
+    font-size     : 13pt;        
+    text-align    : center;      
+    cursor        : pointer;     
+    padding       : 12px 44px;   
+    background    : rgba(153, 153, 153, 0.97);    
+    color         : #ffffff;     
+    line-height   : 1em;         
+    transition    : .3s;         
+    box-shadow    : 6px 6px 3px #666666;  
+    border        : 2px solid rgba(153, 153, 153, 0.97);    
+  }
+  .button:hover {
+    box-shadow    : none;        
+    color         : rgba(153, 153, 153, 0.97);    
+    background    : #ffffff;    
+  }

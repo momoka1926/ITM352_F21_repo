@@ -75,9 +75,7 @@ Used W3 Pizza Restaurant Template.
     <!-- Header with image -->
     <header class="bgimg w3-display-container w3-grayscale-min" id="home">
         <div class="w3-display-middle w3-center">
-            <span class="w3-text-white w3-hide-small" style="font-size:100px">Fresh<br>Japanese Seafood</span>
-            <span class="w3-text-white w3-hide-large w3-hide-medium" style="font-size:60px"><b>fresh<br>Japanese
-                    Seafood</b></span>
+            <span class="w3-text-white w3-hide-small" style="font-size:100px">Fresh<br>JSeafood Store</span>
             <p><a href="#menu" class="w3-button w3-xxlarge w3-white">Let me see the menu</a></p>
         </div>
     </header>
@@ -86,9 +84,7 @@ Used W3 Pizza Restaurant Template.
 
     <body>
         <h1 id='menu'>
-
-            <br>
-            <h1 class="w3-center w3-jumbo" style="margin-bottom:64px">Fresh JSeafood Store</h1>
+            <h1 class="w3-center w3-jumbo" style="margin-bottom:64px"></h1>
             <form name="order_form" action="./process_form" method="POST">
                 <!-- the server is going to post the form to process_form -->
                 <div>
@@ -103,7 +99,7 @@ Used W3 Pizza Restaurant Template.
                 
                     <p><span class="w3-left w3-tag w3-dark-grey w3-round">$${products[i].price}</span></p>
                     
-                    <input type="number" placeholder="10 Available" name="quantity[${i}]" onkeyup="checkQuantityTextbox(this)">
+                    <input type="text" placeholder="10 Available" name="quantity[${i}]" onkeyup="checkQuantityTextbox(this)">
 
                     <div id="quantity[${i}]_errordiv"></div>
                     <div class="img_wrap">
@@ -116,7 +112,7 @@ Used W3 Pizza Restaurant Template.
                 </div>
 
                 <!-- purchase button -->
-                <input type="submit" value="PURCHASE">
+                <input type="submit" class="button" value="PURCHASE">
 
 
             </form>
