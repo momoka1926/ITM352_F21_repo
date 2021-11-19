@@ -1,7 +1,7 @@
 /* 
 Momoka Michimoto
 This makes the server for my store.
-Checking the quantity.
+Also checking if the customer enter the valid quantity.
 Code referenced from Lab13 Ex4 and screen cast.
 Professor Port helped me some codes.
 */
@@ -84,8 +84,7 @@ app.listen(8080, () => console.log(`listening on port 8080`));
 function isNonNegInt(q, returnErrors = false) {
     errors = []; // assume no errors
     if (q == '') q = 0  //blank means 0
-    if (Number(q) != q) errors.push('<font color="red">Not a number</font>');
-    //check if value is a number
+    if (Number(q) != q) errors.push('<font color="red">Not a number</font>'); //check if value is a number
     if (q < 0) errors.push('<font color="red">Negative value</font>'); // Check if it is non-negative
     if (parseInt(q) != q) errors.push('<font color="red">Not an integer</font>'); // Check if it is an integer
 
