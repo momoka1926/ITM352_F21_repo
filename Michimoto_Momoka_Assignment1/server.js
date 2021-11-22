@@ -55,7 +55,9 @@ app.post('/process_form', function (request, response) {
     //ask if the object is empty or not
     if (Object.keys(errors).length == 0) {
         // remove from inventory quantities
+        for(i in products){
         products[i].quantity_available -= Number(`quantity${i}`);
+        }
         response.redirect('./invoice.html?' + qs.stringify(qty_obj));
     } else { //if i have errors, take the errors and go back to products_display.html
         let errs_obj = { "errors": JSON.stringify(errors) };

@@ -48,7 +48,7 @@ app.get("/register", function (request, response) {
     // Give a simple register form
     str = `
 <body>
-<form action="" method="POST">
+<form action="register" method="POST">
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
 <input type="password" name="repeat_password" size="40" placeholder="enter password again"><br />
