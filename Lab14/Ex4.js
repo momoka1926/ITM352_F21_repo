@@ -33,7 +33,7 @@ app.get("/login", function (request, response) {
     // Give a simple login form
     str = `
 <body>
-<form action="" method="POST"> 
+<form action="javascript" method="POST"> 
 <input type="text" name="username" size="40" placeholder="enter username" ><br />
 <input type="password" name="password" size="40" placeholder="enter password"><br />
 <input type="submit" value="Submit" id="submit">
@@ -61,6 +61,24 @@ app.get("/register", function (request, response) {
 });
 
 
+
+app.post("/login", function (request, response) {
+    // Process login form POST and redirect to logged in page if ok, back to login page if not 
+    let login_username = request.body['username'];
+    let login_password = request.body['password'];
+    // check if username exeist, then check password entered match password stored
+    if (typeof users_data[login_username] != 'undefined') {
+        if (users_data[login_username]["password"] == login_password) {
+            response.send(`${login_username} is loged in`);
+        } else {
+            response.redirect(`./login`);
+            // if the password doesn't match, redirect to the register page.
+        }
+    }
+});
+
+
+
 app.post("/register", function (request, response) {
     // process a simple register form
     username = request.body.username;
@@ -69,25 +87,8 @@ app.post("/register", function (request, response) {
     users_data[username].email = request.body.email;
     console.log(users_data);
     //creates a new file if the specified file does not exist
-    fs.writeFileSync(filename, JSPN.stringify(users_data));
+    fs.writeFileSync(filename, JSON.stringify(users_data));
     response.send('Successfully registered');
 });
-
-
-app.post("/login", function (request, response) {
-    // Process login form POST and redirect to logged in page if ok, back to login page if not 
-    let login_username = request.body['username'];
-    let login_password = request.body['password'];
-    // check if username exeist, then check password entered match password stored
-    if (typeof users_reg_data[login_username] != 'undefined') {
-        if (users_reg_data[login_username]["password"] == login_password) {
-            response.send(`${login_username} is loged in`);
-        } else {
-            response.redirect(`./login`);
-            // if the password and repeat_password don't match, redirect to the register page.
-        }
-    }
-});
-
 
 app.listen(8080, () => console.log(`listening on port 8080`));
