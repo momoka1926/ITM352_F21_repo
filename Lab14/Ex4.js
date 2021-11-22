@@ -9,21 +9,26 @@ if (fs.existsSync(filename)) {
     var file_stats = fs.statSync(filename);
     console.log(`${filename} has ${file_stats.size} characters`);
     // have reg data file, so read data and parse into user_data_obj
-    data = fs.readFileSync(filename, "utf-8");
+    var data = fs.readFileSync(filename, "utf-8");
     users_data = JSON.parse(data);
+
+    username = 'newuser';
+    users_data[username] = {};
+    users_data[username].password = 'newpass';
+    users_data[username].email = 'newuser@user.com';
+
     console.log(data);
+
 } else {
     console.log(`${filename} does not exist`);
 }
 
-username = 'newuser';
-users_data[username] = {};
-users_data[username].password = 'newpass';
-users_data[username].email = 'newuser@user.com';
 
 // a method inbuilt in express to recognize the incoming Request Object as strings or arrays, middleware
 app.use(express.urlencoded({ extended: true }));
 
+
+//add the submitted form data to users_reg_data then saves this updated object to user_data.json using JSON.stringify() 
 app.get("/login", function (request, response) {
     // Give a simple login form
     str = `
@@ -37,6 +42,7 @@ app.get("/login", function (request, response) {
     `;
     response.send(str);
 });
+
 
 app.get("/register", function (request, response) {
     // Give a simple register form
@@ -52,34 +58,35 @@ app.get("/register", function (request, response) {
 </body>
     `;
     response.send(str);
- });
+});
 
- app.post("/register", function (request, response) {
+
+app.post("/register", function (request, response) {
     // process a simple register form
     username = request.body.username;
     users_data[username] = {};
     users_data[username].password = request.body.password;
     users_data[username].email = request.body.email;
     console.log(users_data);
- });
+    //creates a new file if the specified file does not exist
+    fs.writeFileSync(filename, JSPN.stringify(users_data));
+    response.send('Successfully registered');
+});
 
- 
+
 app.post("/login", function (request, response) {
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
     let login_username = request.body['username'];
     let login_password = request.body['password'];
     // check if username exeist, then check password entered match password stored
-    if (typeof users_reg_data [login_username] != 'undefined') {
+    if (typeof users_reg_data[login_username] != 'undefined') {
         if (users_reg_data[login_username]["password"] == login_password) {
             response.send(`${login_username} is loged in`);
         } else {
-            response.redirect(`./login?err=incorrect password for ${login_username}`); 
+            response.redirect(`./login`);
+            // if the password and repeat_password don't match, redirect to the register page.
         }
-    } else {
-        response.send(`${login_username} does not exist`);
     }
-
-    response.send('processing login' + JSON.stringify(request.body))
 });
 
 
