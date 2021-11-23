@@ -29,6 +29,7 @@ app.post('/process_form', function (request, response) {
     var quantities = request.body["quantity"];
     // var quantity_available = 10;
     var errors = {};
+    let POST = request.body;
     var has_quantities = false; //assume no quantities
     // Check that quantities are non-negative integers
     for (i in quantities) {
@@ -52,12 +53,12 @@ app.post('/process_form', function (request, response) {
 
 
     let qty_obj = { "quantity": JSON.stringify(request.body["quantity"]) };
-    console.log(Object.keys(errors));
+    // console.log(Object.keys(errors));
     //ask if the object is empty or not
     if (Object.keys(errors).length == 0) {
         // remove from inventory quantities
         for(i in products){
-        products[i].quantity_available -= Number(`quantities${i}`);
+        products[i].quantity_available -= Number(POST[`quantities${i}`]);
         }
         response.redirect('./invoice.html?' + qs.stringify(qty_obj));
     } else { //if i have errors, take the errors and go back to products_display.html
