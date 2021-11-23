@@ -24,6 +24,9 @@ Used template from bootdey.com.
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Document</title>
   <link rel="stylesheet" href="invoice-style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display&display=swap" rel="stylesheet">
   <style>
     body {
       transform: scale(1);
@@ -53,9 +56,9 @@ Used template from bootdey.com.
                           </td>
                         </tr>
 
-                        <table border="2">
-                          <tbody>
-                            <tr>
+                        <td class="content-block">
+                          <table class="invoice">
+                              <tbody><tr>
                               <th style="text-align: center;" width="43%">Item</th>
                               <th style="text-align: center;" width="11%">quantity</th>
                               <th style="text-align: center;" width="13%">price</th>
@@ -73,7 +76,7 @@ Used template from bootdey.com.
               <td width="43%">${products[i].name}</td>
               <td align="center" width="11%">${quantities[i]}</td>
               <td width="13%">\$${products[i].price}</td>
-              <td width="54%">\$${extended_price.toFixed(2)}</td>
+              <td style="text-align: center;" colspan="3" width="67%">\$${extended_price.toFixed(2)}</td>
             </tr>
             `);
                                 }
@@ -101,8 +104,9 @@ Used template from bootdey.com.
                               <td colspan="4" width="100%">&nbsp;</td>
                             </tr>
                             <tr>
+                              <div style="border: solid thin">
                               <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
-                              <td width="54%">$
+                              <td style="text-align: center;" colspan="3" width="67%">$
                                 <script>document.write(subtotal.toFixed(2));</script>
                               </td>
                             </tr>
@@ -111,25 +115,26 @@ Used template from bootdey.com.
                                   style="font-family: arial;">Tax @
                                   <script>document.write(100 * tax_rate);</script>%
                                 </span></td>
-                              <td width="54%">$
+                                <td style="text-align: center;" colspan="3" width="67%">$
                                 <script>document.write(tax.toFixed(2));</script>
                               </td>
                             </tr>
                             <tr>
                               <td style="text-align: center;" colspan="3" width="67%">Shipping</span></td>
-                              <td width="54%">$
+                              <td style="text-align: center;" colspan="3" width="67%">$
                                 <script>document.write(shipping.toFixed(2));</script>
                               </td>
                             </tr>
                             <tr>
                               <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
-                              <td width="54%"><strong>$
+                              <td style="text-align: center;" colspan="3" width="67%"><strong>$
                                   <script>document.write(total.toFixed(2));</script>
                                 </strong></td>
                             </tr>
+                            </tbody>
                           </tbody>
                         </table>
-                        <div id="delivery">
+                        <div style="border: solid thin">
                           <br><b>
                             Shipping Policy: All orders are processed within 2-3 business days. 
                             <br>Orders are not shipped or delivered on holidays. 
@@ -139,8 +144,7 @@ Used template from bootdey.com.
                             <br>
                           </b>
                         </div>
-                        <br>
-                        <input type="button" value="SEND AN EMAIL">
+                       
 </body>
 
 </html>

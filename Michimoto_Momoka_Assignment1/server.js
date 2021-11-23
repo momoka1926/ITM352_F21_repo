@@ -24,12 +24,19 @@ app.all('*', function (request, response, next) {
 //get the body
 app.use(express.urlencoded({ extended: true }));
 
+//routing
+app.get("/products.js", function (request, response, next) {
+    response.type('.js');
+    var products_str = `var products = ${JSON.stringify(products)};`;
+    response.send(products_str);
+});
+
 //get the quantity data from the order form, then check it and 
-app.post('/process_form', function (request, response) {
+app.post('/process_form', function (request, response, next) {
     var quantities = request.body["quantity"];
     // var quantity_available = 10;
     var errors = {};
-    let POST = request.body;
+    let reqbody = request.body;
     var has_quantities = false; //assume no quantities
     // Check that quantities are non-negative integers
     for (i in quantities) {
@@ -58,7 +65,7 @@ app.post('/process_form', function (request, response) {
     if (Object.keys(errors).length == 0) {
         // remove from inventory quantities
         for(i in products){
-        products[i].quantity_available -= Number(POST[`quantities${i}`]);
+        products[i].quantity_available -= Number(reqbody[`quantities${i}`]);
         }
         response.redirect('./invoice.html?' + qs.stringify(qty_obj));
     } else { //if i have errors, take the errors and go back to products_display.html
@@ -70,18 +77,7 @@ app.post('/process_form', function (request, response) {
 });
 
 
-//routing
-app.get("/products.js", function (request, response, next) {
-    response.type('.js');
-    var products_str = `var products = ${JSON.stringify(products)};`;
-    response.send(products_str);
-});
 
-// route all other GET requests to files in public 
-app.use(express.static('./public')); 
-
-// start server
-app.listen(8080, () => console.log(`listening on port 8080`));
 
 // process purchase request (validate quantities, check quantity available)
 // codes are referenced from info_server_Ex5.js
@@ -94,3 +90,9 @@ function isNonNegInt(q, returnErrors = false) {
 
     return returnErrors ? errors : (errors.length == 0);
 }
+
+// route all other GET requests to files in public 
+app.use(express.static('./public')); 
+
+// start server
+app.listen(8080, () => console.log(`listening on port 8080`));
