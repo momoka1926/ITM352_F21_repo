@@ -69,8 +69,8 @@ app.post("/register", function (request, response) {
 
 app.post("/login", function (request, response) {
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
-    let login_username = request.body['username'];
-    let login_password = request.body['password'];
+    login_username = request.body['username'].toLowerCase();
+    login_password = request.body['password'];
     // check if username exeist, then check password entered match password stored
     if (typeof users_reg_data[login_username] != 'undefined') {
         // take "password" and check if the password in the textbox is right

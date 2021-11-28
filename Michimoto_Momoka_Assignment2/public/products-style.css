@@ -1,0 +1,89 @@
+/* 
+Momoka Michimoto
+This page designed my order page.
+Referenced W3 Pizza Restaurant Template 
+*/
+
+body,
+html {
+    height: 100%;
+}
+
+body,
+h1,
+h2,
+h3,
+h4,
+h5,
+h6 {
+    font-family: 'Montserrat', sans-serif;
+    margin: 0px;
+	padding-top: 10px;
+}
+
+.menu {
+    display: none
+
+}
+
+
+.bgimg {
+    background-repeat: no-repeat;
+    background-size: cover;
+    background-image: url("./images/Background.jpg");
+    min-height: 90%;
+}
+
+.img {
+    border: 3px solid rgb(39, 53, 36);
+    border-radius: 25px;
+    padding: 5px;
+    width: 200px;
+    padding-top: 30px;
+  }
+
+.img_wrap{
+border: 1px solid #ddd;
+width: 400px;
+height: 226px;
+margin: 20px auto 0;
+transition-duration: 0.5s;
+padding: 5px;
+content: "";
+clear: both;
+display: table;
+
+}
+
+.img_wrap img{
+width: 100%;
+cursor: pointer;
+display: block;
+}
+
+.img_wrap:hover{
+box-shadow: 10px 10px 10px rgba(0,0,0,0.5);
+transform: translateY(-10px);
+transition-duration: 0.5s;
+}
+
+
+/* Button Template referecned from webparts.cman.jp*/
+.button {
+    display       : inline-block;
+    font-size     : 13pt;        
+    text-align    : center;      
+    cursor        : pointer;     
+    padding       : 12px 44px;   
+    background    : rgba(153, 153, 153, 0.97);    
+    color         : #ffffff;     
+    line-height   : 1em;         
+    transition    : .3s;         
+    box-shadow    : 6px 6px 3px #666666;  
+    border        : 2px solid rgba(153, 153, 153, 0.97);    
+  }
+  .button:hover {
+    box-shadow    : none;        
+    color         : rgba(153, 153, 153, 0.97);    
+    background    : #ffffff;    
+  }

@@ -1,20 +1,29 @@
 <!-- 
 Momoka Michimoto
 This page creates the invoice page.
-Code referenced from assignment 1 examples.
+Code referenced from my assignment 1.
 Used template from bootdey.com.
 -->
 
 <script src="./products.js" type="text/javascript"></script>
+<script src="./user_data.json" type="json"></script>
 <script>
   let params = (new URL(document.location)).searchParams; //takes data from query strings
   var quantities = [];
   if (params.has('quantity')) {
     quantities = JSON.parse(params.get(`quantity`));//turns JSON in array
   }
+
+
+// If either the login name or password is wrong, send them back to the login page
+var username = [];
+if(params.has('userName')){
+  username = JSON.parse(params.get(`userName`));
+} else {
+  window.location.href = "./login.html";
+}
+
 </script>
-
-
 <!DOCTYPE html>
 <html lang="en">
 
