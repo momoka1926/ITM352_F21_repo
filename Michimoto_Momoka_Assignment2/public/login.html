@@ -1,16 +1,6 @@
 <!-- Template from w3 school -->
 <script src="/user_data.js" type="json"></script>
 
-<!-- <script>
-  //borrowed code from classmates
-  
-    if (params.has('error')) {
-        quantity_form["quantity_textbox"].value = params.get('quantity_textbox'); //this code made a sticky 
-      
-    }
-
-</script> -->
-
 
 <!DOCTYPE html>
 <html lang="en">
@@ -33,19 +23,15 @@
       <p>Please fill out this form to get to invoice page.</p>
       <hr>
 
-
       <label for="username"><b>Name</b></label>
       <input type="text" placeholder="Enter Name" name="username" id="username" required>
-
-      <!-- <label for="email"><b>Email</b></label>
-      <input type="text" placeholder="Enter Email" name="email" id="email" required> -->
 
       <label for="password"><b>Password</b></label>
       <input type="password" placeholder="Enter Password" name="psw" id="psw" required>
 
       <hr>
 
-      <button type="submit" class="registerbtn">Login</button>
+      <button type="submit" class="btn" value="login" name="login">Login</button>
 
       <input type="button" onClick="location.href='products_display.html'" class="cancelbtn" value='Cancel'>
     </div>
@@ -58,6 +44,19 @@
       <p>You don't have an account yet? <a onclick="window.location.href = 'register.html';">Register</a></p>
     </div>
   </form>
+
+  <script>
+    //check if the customers have wrong username or password, if there is and display alert message
+    let params = (new URL(document.location)).searchParams;
+    window.onload = function () {
+      if (params.has('login_err')) {
+        alert(params.get('login_err'));
+      }
+      if (params.has('username')) { //sticky
+        username.value = params.get('username')
+      }
+    }
+  </script>
 
 </body>
 
