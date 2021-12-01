@@ -14,7 +14,6 @@ var express = require('express');
 var app = express();
 var fs = require('fs');
 const qs = require('querystring');
-const { request } = require('express');
 
 //get the users data from json file
 var filename = './user_data.json';
@@ -32,39 +31,46 @@ if (fs.existsSync(filename)) {
     console.log(filename + ' does not exist!');
 }
 
+// monitor all requests
+// checking to see if it gets the right things
+app.all('*', function (request, response, next) {
+    console.log(request.method + ' to ' + request.path, request.body);
+    next(); //keep going
+});
+
+
 //get the body
 app.use(express.urlencoded({ extended: true }));
 
 
 //----------------LOGIN page-----------------
 app.post("/process_login", function (request, response) {
+    var errors = {};
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
     var username = request.body['username'].toLowerCase();
-    var password = request.body['password'];
 
     // check if username exist, then check password entered match password stored
     if (typeof user_data[username] != 'undefined') {
         // take "password" and check if the password in the textbox is right
         if (user_data[username].password == request.body['password']) {
             // if matches, (true)
-            qty_data['username'] = username;
-            qty_data['email'] = user_data[username].email;
             let params = new URLSearchParams(qty_data);
+            params.append('username' , username); //put username into params
+            params.append('email' , user_data[username].email);
             //directly move to the invoice page
             response.redirect('./invoice.html?' + params.toString());
-           
+           return;
         } else {
             // if the password doesn't match, (false)      
-            request.query.username = username;
-            request.query['login_err'] = 'Wrong Password';
+            errors['login_err'] = 'Wrong Password';
         }
     } else {
-        // if the username doesn't match
-        request.query.password = password;
-        request.query['login_err'] = 'Wrong Username';
+        // if the username doesn't exist
+        errors['login_err'] = 'Wrong Username';
     }
-    //then,
-    params = new URLSearchParams(request.query);
+    //then go back to login with errors
+    let params = new URLSearchParams(errors);
+    params.append('username' , username); //put username into params
     response.redirect(`./login.html?` + params.toString());
 });
 //----------------------------
@@ -73,56 +79,74 @@ app.post("/process_login", function (request, response) {
 // -------------REGISTER page--------------
 app.post("/register", function (request, response) {
     var reg_errors = {};
-    var reg_username = request.body['username'].toLowerCase();
-    var reg_password = request.body['password'];
 
-    //USERNAME
-    if (/^[A-Za-z, ]+$/.test(request.body.name)) {
-    } else {
-        reg_errors['name'] = 'Please enter YOUR FULL NAME here';
+    // check username 
+    var reg_username = request.body['username'].toLowerCase();
+    // only letters and numbers, at least 4 but less than 10, 
+    if (/^[0-9a-zA-Z]{4,10}$/.test(request.body.username) == false) {
+        reg_errors['username'] = 'Please use only letters and numbers, at least 4 but less than 10 characters';
     }
-    if (/^[0-9a-zA-Z]+$/.test(request.body.name)) {
-    }
-    else {
-        reg_errors['name'] = 'Please use only letters';
-    }
-    if (typeof user_data[reg_username] != undefined) {
+    // unique case insenitive
+    if (typeof user_data[reg_username] != 'undefined') {
         reg_errors['username'] = 'This username is already taken'
     }
+
+    // check fullname
+    if (/^[A-Za-z, ]+$/.test(request.body.fullname) == false) {
+        reg_errors['name'] = 'Please enter YOUR FULL NAME here';
+    }
+    // check email
+    if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(request.body.email) == false) {
+        reg_errors['email'] = 'Please use a valid email (Ex: name@jseafoods.com)';
+    }
+
+    // check password
+    if (request.body.password.length < 6) {
+        reg_errors['password'] = 'You need to have a minimum of 6 characters'
+    };
+
+    // check psw-repeat
+    if (request.body.password != request.body.repeat_password) {
+        reg_errors['repeat_password'] = `Repeat password is not the same as password you typed above`;
+    }
+
+    /*
+    
     if (typeof user_data[reg_username] == '') {
         reg_errors['username'] = `Please decide your username`;
     }
 
-    //EMAIL
-    if (/^[a-zA-Z0-9.!#$%&'*+/=?^_`{|}~-]+@[a-zA-Z0-9-]+(?:\.[a-zA-Z0-9-]+)*$/.test(request.body.email)) {
-    } else {
-        reg_errors['email'] = 'Please use a valid email (Ex: name@jseafoods.com)'
-    }
-    //PASSWORD
-    if (request.body.password.length < 7) {
-        reg_errors['password'] = 'Please use minimum of 7 characters to your password'
-    };
+
+    
     //REPEAT PASSWORD 
     if (request.body.password !== request.body.repeat_password) {
         reg_errors['repeat_password'] = `Repeat password is not the same as password you typed above`;
     }
 
+    */
+
     //borrowed from Assignment 2 useful example
     //save the information to user_data.json
     if (Object.keys(reg_errors).length == 0) {
-        user_data[username] = {};
-        user_data[username].name = request.body.name;
-        user_data[username].password = request.body.password;
-        user_data[username].email = request.body.email;
+        user_data[reg_username] = {};
+        user_data[reg_username].name = request.body.name;
+        user_data[reg_username].password = request.body.password;
+        user_data[reg_username].email = request.body.email;
+        // save updated user_data obj to file
+        fs.writeFileSync(filename, JSON.stringify(user_data));
 
-        fs.writeFileSync(filename, JSON.stringify(user_data), "utf-8");
-        qty_data['username'] = username;
-        qty_data['email'] = user_data[username]['email'];
-        let params = new URLSearchParams(qty_data);
-        response.redirect(`./invoice.html?` + params.toString());
+        let params = new URLSearchParams(qty_data); // put saved qty data into query
+            params.append('username' , request.body.username); //put username into query
+            params.append('email' , user_data[reg_username].email);
+            //directly move to the invoice page
+            response.redirect('./invoice.html?' + params.toString());
+            return;
     } else {
-        request.body['reg_errors'] = JSON.stringify(reg_errors);
-        let params = new URLSearchParams(request.body);
+        //then go back to register page with errors
+        let errs_obj = { "reg_errors": JSON.stringify(reg_errors) };
+        let params = new URLSearchParams(errs_obj);
+        params.append('reg_data' , JSON.stringify(request.body)); //put reg data into params
+        params.append('username' , request.body.username); //put username into params
         response.redirect(`./register.html?` + params.toString());
     }
 });
@@ -130,12 +154,6 @@ app.post("/register", function (request, response) {
 
 
 
-// monitor all requests
-// checking to see if it gets the right things
-app.all('*', function (request, response, next) {
-    console.log(request.method + ' to ' + request.path, request.body);
-    next(); //keep going
-});
 
 //routing
 app.get("/products.js", function (request, response, next) {
@@ -184,7 +202,9 @@ app.post('/process_form', function (request, response, next) {
         for (i in products) {
             products[i].quantity_available -= Number(quantities[i]);
         }
-        response.redirect('./invoice.html?' + qs.stringify(qty_obj));
+        // save quantity data for use later in invoice
+        qty_data = qty_obj;
+        response.redirect('./login.html');
     } else { //if i have errors, take the errors and go back to products_display.html
         let errs_obj = { "errors": JSON.stringify(errors) };
         console.log(qs.stringify(qty_obj));
