@@ -1,10 +1,9 @@
 /* 
-Momoka Michimoto
-This makes the server.
-Also checking if the customer enter the valid quantity.
-Code referenced from Assignment1, Lab14 Ex4, and Assignment 2 code example.
+Author: Momoka Michimoto
+Description: This makes the server. Also checking if the customer enter the valid quantity.
+Sources: Assignment1, Lab14 Ex4, W3resource, and Assignment 2 code example.
 Professor Port helped me some codes.
-Got some tips from classmates and W3resource.
+Got some tips from classmates.
 */
 
 var products = require('./products.json');
