@@ -109,20 +109,6 @@ app.post("/register", function (request, response) {
         reg_errors['repeat_password'] = `Repeat password is not the same as password you typed above`;
     }
 
-    /*
-    
-    if (typeof user_data[reg_username] == '') {
-        reg_errors['username'] = `Please decide your username`;
-    }
-
-
-    
-    //REPEAT PASSWORD 
-    if (request.body.password !== request.body.repeat_password) {
-        reg_errors['repeat_password'] = `Repeat password is not the same as password you typed above`;
-    }
-
-    */
 
     //borrowed from Assignment 2 useful example
     //save the information to user_data.json
