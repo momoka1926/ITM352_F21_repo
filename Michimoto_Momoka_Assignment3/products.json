@@ -1,0 +1,80 @@
+{
+    "Seafoods": [
+        {
+            "seafoods": "Hokkaido Kegani Crab",
+            "price": 115.25,
+            "image": "Kegani.jpg",
+            "quantity_available": 10        },
+        {
+            "seafoods": "Aomori Chutoro",
+            "price": 81.42,
+            "image": "Chutoro.jpg",
+            "quantity_available": 10        },
+        {
+            "seafoods": "Hokkaido Uni",
+            "price": 50.34,
+            "image": "Uni.jpg",
+            "quantity_available": 10
+        }
+    ],
+    "alcohol": [
+        {
+            "alcohol": "Kubota Yuzu No Sake",
+            "price_a": 18.95,
+            "image_a": "Yuzushu.jpg",
+            "quantity_available": 10
+        },
+        {
+            "alcohol": "Momosuke Shochu",
+            "price_a": 28.95,
+            "image_a": "Momosuke.jpg",
+            "quantity_available": 10
+        },
+        {
+            "alcohol": "Hanzo Umeshu",
+            "price_a": 15.23,
+            "image_a": "Umeshu.jpg",
+            "quantity_available": 10
+        }
+    ],
+    "sweets": [
+        {
+            "sweets": "Funwari Meijin Mochi Puffs",
+            "price_sw": 6.00,
+            "image_sw": "Mochi.jpg",
+            "quantity_available": 10
+        },
+        {
+            "sweets": "Matcha Chocolate Stick Cake",
+            "price_sw": 3.00,
+            "image_sw": "Matcha.jpg",
+            "quantity_available": 10
+        },
+        {
+            "sweets": "Mini Red Bean Crackers",
+            "price_sw": 11.00,
+            "image_sw": "RedBean.jpg",
+            "quantity_available": 10
+        }
+    ],
+    "plates": [
+        {
+            "plates": "Sushi Plate",
+            "price_p": 49.90,
+            "image_p": "SushiPlate.jpg",
+            "quantity_available": 10
+        },
+        {
+            "plates": "Traditional Plate",
+            "price_p": 52.70,
+            "image_p": "Traditional.jpg",
+            "quantity_available": 10
+        },
+        {
+            "plates": "Retro Plate",
+            "price_p": 48.90,
+            "image_p": "RetroPlate.jpg",
+            "quantity_available": 10
+        }
+    ]
+}

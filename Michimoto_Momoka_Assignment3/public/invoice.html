@@ -1,0 +1,166 @@
+<!-- 
+Author: Momoka Michimoto
+Description:This page creates the invoice page.
+Sources: My assignment 1, and bootdey.com.
+-->
+
+<script src="./products.js" type="text/javascript"></script>
+
+<script>
+  let params = (new URL(document.location)).searchParams; //takes data from query strings
+  var quantities = []; //get quantities
+  if (params.has('quantity')) {
+    quantities = JSON.parse(params.get(`quantity`));//turns JSON in array
+  }
+
+
+  // If either the login name or password is wrong, send them back to the login page
+  var username = [];
+  if (params.has('username')) {
+    username = JSON.parse(params.get(`username`));
+  } else {
+    window.location.href = "./login.html";
+  }
+
+</script>
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Document</title>
+  <link rel="stylesheet" href="invoice-style.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Montserrat&family=Playfair+Display&display=swap"
+    rel="stylesheet">
+  <style>
+    body {
+      transform: scale(1);
+      transform-origin: 0 0;
+    }
+  </style>
+</head>
+
+
+<!-- used template from bootdey.com  -->
+
+<body>
+   <form class="register" action="./register" method="POST">
+  <table class="body-wrap">
+    <tbody>
+      <tr>
+        <td></td>
+        <td class="container" width="600">
+          <div class="content">
+            <table class="main" width="100%" cellpadding="0" cellspacing="0">
+              <tbody>
+                <tr>
+                  <td class="content-wrap aligncenter">
+                    <table width="100%" cellpadding="0" cellspacing="0">
+                      <tbody>
+                        <tr>
+                          <td class="content-block">
+                            <h2>Your Receipt</h2>
+                          </td>
+                        </tr>
+
+                        <td class="content-block">
+                          <table class="invoice">
+                            <tbody>
+                              <tr>
+                                <th style="text-align: center;" width="43%">Item</th>
+                                <th style="text-align: center;" width="11%">quantity</th>
+                                <th style="text-align: center;" width="13%">price</th>
+                                <th style="text-align: center;" width="54%">extended price</th>
+                              </tr>
+                              <script>
+                                subtotal = 0
+                                for (i = 0; i < products.length; i++) {
+                                  if (quantities[i] > 0) {
+                                    // product row
+                                    extended_price = quantities[i] * products[i].price
+                                    subtotal += extended_price;
+                                    document.write(`
+            <tr>
+              <td width="43%">${products[i].name}</td>
+              <td align="center" width="11%">${quantities[i]}</td>
+              <td width="13%">\$${products[i].price}</td>
+              <td style="text-align: center;" colspan="3" width="67%">\$${extended_price.toFixed(2)}</td>
+            </tr>
+          
+            `);
+                                  }
+                                }
+                                // Compute tax
+                                var tax_rate = 0.04;
+                                var tax = tax_rate * subtotal;
+
+                                // Compute shipping
+                                if (subtotal <= 50) {
+                                  shipping = 4;
+                                }
+                                else if (subtotal <= 100) {
+                                  shipping = 5;
+                                }
+                                else {
+                                  shipping = 0.04 * subtotal; // 4% of subtotal
+                                }
+
+                                // Compute grand total
+                                var total = subtotal + tax + shipping;
+                              </script>
+
+                              <tr>
+                                <td colspan="4" width="100%">&nbsp;</td>
+                              </tr>
+                              <tr>
+                                <div style="border: solid thin">
+                                  <td style="text-align: center;" colspan="3" width="67%">Sub-total</td>
+                                  <td style="text-align: center;" colspan="3" width="67%">$
+                                    <script>document.write(subtotal.toFixed(2));</script>
+                                  </td>
+                              </tr>
+                              <tr>
+                                <td style="text-align: center;" colspan="3" width="67%"><span
+                                    style="font-family: arial;">Tax @
+                                    <script>document.write(100 * tax_rate);</script>%
+                                  </span></td>
+                                <td style="text-align: center;" colspan="3" width="67%">$
+                                  <script>document.write(tax.toFixed(2));</script>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="text-align: center;" colspan="3" width="67%">Shipping</span></td>
+                                <td style="text-align: center;" colspan="3" width="67%">$
+                                  <script>document.write(shipping.toFixed(2));</script>
+                                </td>
+                              </tr>
+                              <tr>
+                                <td style="text-align: center;" colspan="3" width="67%"><strong>Total</strong></td>
+                                <td style="text-align: center;" colspan="3" width="67%"><strong>$
+                                    <script>document.write(total.toFixed(2));</script>
+                                  </strong></td>
+                              </tr>
+                            </tbody>
+                      </tbody>
+                    </table>
+                    <div style="border: solid thin">
+                      <br><b>
+                        Shipping Policy: All orders are processed within 2-3 business days.
+                        <br>Orders are not shipped or delivered on holidays.
+                        <br>
+                        <br>
+                        Return and Refund Policy: We will be happy to refund any product when accompanied by proof of
+                        purchase within 30 days of purchase.
+                        <br>
+                      </b>
+                    </div>
+                    <input type="button" class="button" value="Back to Home"
+                      onclick="window.location.href = 'products_display.html';">
+
+</body>
+
+</html>

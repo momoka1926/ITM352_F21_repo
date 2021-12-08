@@ -1,0 +1,67 @@
+<!-- 
+Author: Momoka Michimoto
+Description:This page creates the login page.
+Sources: My assignment 1, and w3 school.
+-->
+<script src="/user_data.js" type="json"></script>
+
+
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link rel="stylesheet" href="login.css">
+  <link href="https://fonts.googleapis.com/css2?family=Lobster&family=Montserrat&family=Playfair+Display&display=swap"
+    rel="stylesheet">
+  <title>Document</title>
+</head>
+
+<body>
+
+  <form name="process_login" action="/process_login" method="POST">
+    <div class="container">
+      <h1>Login</h1>
+      <p>Please fill out this form to get to invoice page.</p>
+      <hr>
+
+      <label for="username"><b>Name</b></label>
+      <input type="text" placeholder="Enter Name" name="username" id="username" required>
+
+      <label for="password"><b>Password</b></label>
+      <input type="password" placeholder="Enter Password" name="password" id="psw" required>
+
+      <hr>
+
+      <button type="submit" class="btn" value="login" name="login">Login</button>
+
+      <input type="button" onClick="location.href='products_display.html'" class="cancelbtn" value='Cancel'>
+    </div>
+
+    <label>
+      <input type="checkbox" checked="checked" name="remember"> Remember me
+    </label>
+    
+    <div class="container signin">
+      <p>You don't have an account yet? <a onclick="window.location.href = 'register.html';">Register</a></p>
+    </div>
+  </form>
+
+  <script>
+    //check if the customers have wrong username or password, if there is and display alert message
+    let params = (new URL(document.location)).searchParams;
+    window.onload = function () {
+      if (params.has('login_err')) {
+        alert(params.get('login_err'));
+      }
+      if (params.has('username')) { //sticky
+        username.value = params.get('username')
+      }
+    }
+  </script>
+
+</body>
+
+</html>

@@ -10,7 +10,7 @@ Got some tips from classmates. (Vo Tina, Li Xinfei)
 // borrowed from Lab13
 var products = require('./products.json');
 // set inital inventory 
-products.forEach((prod, i) => { prod.quantity_available = 10; });
+// products.forEach((prod, i) => { prod.quantity_available = 10; });
 var express = require('express');
 var app = express();
 var fs = require('fs');
@@ -18,6 +18,12 @@ const qs = require('querystring');
 
 //get the users data from json file
 var filename = './user_data.json';
+
+//get session
+var session = require('express-session');
+var products_data = require('./products.json');
+
+app.use(session({ secret: "MySecretKey", resave: true, saveUninitialized: true }));
 
 //not to delete the data which customers entered in order page, to bring exact the same data to invoice
 var qty_data = {};
