@@ -12,7 +12,6 @@ var session = require('express-session');
 app.use(session({secret: "MySecretKey", resave: true, saveUninitialized: true}));
 
 
-
 app.get('/set_cookie', function (request, response){
     //this will send a cookie to the requester
     // modify the header
