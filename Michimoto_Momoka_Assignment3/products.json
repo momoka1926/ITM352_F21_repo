@@ -1,17 +1,19 @@
 {
-    "Seafoods": [
+    "seafoods": [
         {
-            "seafoods": "Hokkaido Kegani Crab",
+            "name": "Hokkaido Kegani Crab",
             "price": 115.25,
             "image": "Kegani.jpg",
-            "quantity_available": 10        },
+            "quantity_available": 10       
+         },
         {
-            "seafoods": "Aomori Chutoro",
+            "name": "Aomori Chutoro",
             "price": 81.42,
             "image": "Chutoro.jpg",
-            "quantity_available": 10        },
+            "quantity_available": 10      
+          },
         {
-            "seafoods": "Hokkaido Uni",
+            "name": "Hokkaido Uni",
             "price": 50.34,
             "image": "Uni.jpg",
             "quantity_available": 10
@@ -19,61 +21,61 @@
     ],
     "alcohol": [
         {
-            "alcohol": "Kubota Yuzu No Sake",
-            "price_a": 18.95,
-            "image_a": "Yuzushu.jpg",
+            "name": "Kubota Yuzu No Sake",
+            "price": 18.95,
+            "image": "Yuzushu.jpg",
             "quantity_available": 10
         },
         {
-            "alcohol": "Momosuke Shochu",
-            "price_a": 28.95,
-            "image_a": "Momosuke.jpg",
+            "name": "Momosuke Shochu",
+            "price": 28.95,
+            "image": "Momosuke.jpg",
             "quantity_available": 10
         },
         {
-            "alcohol": "Hanzo Umeshu",
-            "price_a": 15.23,
-            "image_a": "Umeshu.jpg",
+            "name": "Hanzo Umeshu",
+            "price": 15.23,
+            "image": "Umeshu.jpg",
             "quantity_available": 10
         }
     ],
     "sweets": [
         {
-            "sweets": "Funwari Meijin Mochi Puffs",
-            "price_sw": 6.00,
-            "image_sw": "Mochi.jpg",
+            "name": "Funwari Meijin Mochi Puffs",
+            "price": 6.00,
+            "image": "Mochi.jpg",
             "quantity_available": 10
         },
         {
-            "sweets": "Matcha Chocolate Stick Cake",
-            "price_sw": 3.00,
-            "image_sw": "Matcha.jpg",
+            "name": "Matcha Chocolate Stick Cake",
+            "price": 3.00,
+            "image": "Matcha.jpg",
             "quantity_available": 10
         },
         {
-            "sweets": "Mini Red Bean Crackers",
-            "price_sw": 11.00,
-            "image_sw": "RedBean.jpg",
+            "name": "Mini Red Bean Crackers",
+            "price": 11.00,
+            "image": "RedBean.jpg",
             "quantity_available": 10
         }
     ],
     "plates": [
         {
-            "plates": "Sushi Plate",
-            "price_p": 49.90,
-            "image_p": "SushiPlate.jpg",
+            "name": "Sushi Plate",
+            "price": 49.90,
+            "image": "SushiPlate.jpg",
             "quantity_available": 10
         },
         {
-            "plates": "Traditional Plate",
-            "price_p": 52.70,
-            "image_p": "Traditional.jpg",
+            "name": "Traditional Plate",
+            "price": 52.70,
+            "image": "Traditional.jpg",
             "quantity_available": 10
         },
         {
-            "plates": "Retro Plate",
-            "price_p": 48.90,
-            "image_p": "RetroPlate.jpg",
+            "name": "Retro Plate",
+            "price": 48.90,
+            "image": "RetroPlate.jpg",
             "quantity_available": 10
         }
     ]

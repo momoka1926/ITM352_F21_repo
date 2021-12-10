@@ -31,6 +31,13 @@ Descritpion:This page designed my order page.
     font-size: 100%;
     
   }
+
+  main {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+  }
+
   body{
     line-height: 1.7; 
   }
@@ -86,6 +93,7 @@ Descritpion:This page designed my order page.
   }
 
   
+
   table{
     text-align: center;
     font-family:Georgia, 'Times New Roman', Times, serif;
