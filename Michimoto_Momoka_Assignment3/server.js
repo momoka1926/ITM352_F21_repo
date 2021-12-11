@@ -1,7 +1,7 @@
 /* 
 Author: Momoka Michimoto
 Description: This makes the server. Also checking if the customer enter the valid quantity.
-Sources: Assignment1, Lab13, Lab14 Ex4, W3resource, and Assignment 2 code example.
+Sources: Assignment1, Lab13, Lab14 Ex4, W3resource, Assignment1_MVC_server and Assignment 2 code example.
 Professor Port helped me some codes.
 Got some tips from classmates. (Vo Tina, Li Xinfei)
 */
@@ -10,7 +10,7 @@ Got some tips from classmates. (Vo Tina, Li Xinfei)
 // borrowed from Lab13
 var products = require('./products.json');
 // set inital inventory 
-products.forEach((prod, i) => { prod.quantity_available = 10; });
+//products.forEach((prod, i) => { prod.quantity_available = 10; });
 var express = require('express');
 var app = express();
 var fs = require('fs');
@@ -45,9 +45,59 @@ app.all('*', function (request, response, next) {
     next(); //keep going
 });
 
+app.post("/get_products", function (request, response) {
+    response.json(products);
+});
+
+app.get("/get_cart", function (request, response) {
+    response.json(request.session.cart);
+});
+
+
+//routing
+app.get("/products.js", function (request, response, next) {
+    response.type('.js');
+    var products_str = `var products = ${JSON.stringify(products)};`;
+    response.send(products_str);
+});
+
 
 //get the body
 app.use(express.urlencoded({ extended: true }));
+
+//----------------CART-----------------------
+app.post("/add_to_cart", function (request, response) {
+    let POST = request.body;
+    var products_key = request.body['products_key']; // get the product key sent from the form post
+    var erros = {}; // assume no errors
+    var has_quantities = false; //assume no quantities
+    var quantity_array = [];
+
+    for (let i in products[products_key]){
+        q = POST['quantity' + i];
+
+        // check if it's a valid quantity
+        if(isNonNegInt(q) == false){
+            errors['invalid' + i] = `Sorry, ${q} is not a valid quantity for ${products[products_key][i].name}`;
+        }
+
+         // check if quantity desired is avaialble
+         if(q > products[products_key][i].quantity_available){
+             errors['quantity' + i] = `We don't have ${q} ${products[products_key][i].name} available. Sorry for inconvenience.`;
+         }
+
+         //check if the quantity is selected
+         if(!has_quantities){
+            errors['no_quantities'] = `Please select some items!`;
+        }
+
+    }
+    response.redirect('./cart.html');
+});
+
+app.post("/get_cart", function (request, response) {
+    response.json(request.session.cart);
+});
 
 
 //----------------LOGIN page-----------------
@@ -65,7 +115,11 @@ app.post("/process_login", function (request, response) {
             let params = new URLSearchParams(qty_data);
             params.append('username' , username); //put username into params
             params.append('email' , user_data[username].email);
-            //directly move to the invoice page
+            //before purchase the products, the customer needs to login
+            // var user_info = {"username": username, "email": user_data[username].email};
+            // response.cookie('user_info', JSON.stringify(user_info), { maxAge: 10 * 60 * 1000 });
+    
+            //after logged in, directly move to the invoice page
             response.redirect('./invoice.html?' + params.toString());
            return;
         } else {
@@ -81,7 +135,7 @@ app.post("/process_login", function (request, response) {
     params.append('username' , username); //put username into params
     response.redirect(`./login.html?` + params.toString());
 });
-//----------------------------
+//----------------------------------------
 
 
 // -------------REGISTER page--------------
@@ -148,15 +202,10 @@ app.post("/register", function (request, response) {
 //--------------------------
 
 
+//-----------LOGOUT---------------
+app.get("/logout", function (request, response, next){
 
-
-//routing
-app.get("/products.js", function (request, response, next) {
-    response.type('.js');
-    var products_str = `var products = ${JSON.stringify(products)};`;
-    response.send(products_str);
 });
-
 
 
 //-----------PURCHASE-------------
@@ -165,7 +214,7 @@ app.get("/products.js", function (request, response, next) {
 app.post('/process_form', function (request, response, next) {
     var quantities = request.body["quantity"];
     var quantity_available = 10;
-    var errors = {};
+    var errors = {}; //assume no errors
     let reqbody = request.body;
     var has_quantities = false; //assume no quantities
 
@@ -180,9 +229,9 @@ app.post('/process_form', function (request, response, next) {
             has_quantities = true;
         }
         // Check if quantity desired is avaialble
-        if (quantities[i] > products[i].quantity_available) {
-            errors['quantity_available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available. sorry for inconvenience.`;
-        }
+        // if (quantities[i] > products[i].quantity_available) {
+        //     errors['quantity_available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available. Sorry for inconvenience.`;
+        // }
     }
     // Check if quantity is selected
     if (!has_quantities) {
@@ -196,7 +245,7 @@ app.post('/process_form', function (request, response, next) {
     if (Object.keys(errors).length == 0) {
         // remove from inventory quantities
         for (i in products) {
-            products[i].quantity_available -= Number(quantities[i]);
+            products[products_key][i].quantity_available -= Number(quantities[i]);
         }
         // save quantity data for use later in invoice
         qty_data = qty_obj;
@@ -229,12 +278,12 @@ app.get("/checkout", function (request, response) {
     // Generate HTML invoice string
       var invoice_str = `Thank you for your order!<table border><th>Quantity</th><th>Item</th>`;
       var shopping_cart = request.session.cart;
-      for(product_key in products_data) {
-        for(i=0; i<products_data[product_key].length; i++) {
+      for(product_key in products) {
+        for(i=0; i<products[product_key].length; i++) {
             if(typeof shopping_cart[product_key] == 'undefined') continue;
             qty = shopping_cart[product_key][i];
             if(qty > 0) {
-              invoice_str += `<tr><td>${qty}</td><td>${products_data[product_key][i].name}</td><tr>`;
+              invoice_str += `<tr><td>${qty}</td><td>${products[product_key][i].name}</td><tr>`;
             }
         }
     }
@@ -250,11 +299,10 @@ app.get("/checkout", function (request, response) {
         }
       });
     
-      var user_email = 'phoney@mt2015.com';
       var mailOptions = {
-        from: 'phoney_store@bogus.com',
+        from: 'momo2@jstore.com',
         to: user_email,
-        subject: 'Your phoney invoice',
+        subject: 'Jstore invoice',
         html: invoice_str
       };
     

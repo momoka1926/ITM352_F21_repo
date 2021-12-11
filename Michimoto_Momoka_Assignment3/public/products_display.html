@@ -23,28 +23,26 @@ Code referenced from assignment 1 examples.
     }
 
     let params = (new URL(document.location)).searchParams; // get the query string which has the form data
-
-    window.onload = function () {
-
-        // form was submitted so check that quantities are valid then redirect to invoice if ok.
+    window.onload = () => {
+     // form was submitted so check that quantities are valid then redirect to invoice if ok.
         if (params.has('errors')) {
             var errors = JSON.parse(params.get('errors')); //turns string in object
-            let err_str = '';
-            for (err in errors) { //combine errors in one string
-                err_str += errors[err] + '\n';
-            }
-            alert(err_str);
-        }
-
-        if (params.has('quantity')) {
-            var quantities = JSON.parse(params.get('quantity')); //turns string in object
-            // put quantities in quantity textboxes
-            for (i in quantities) {
+            for (i in products){
                 order_form['quantity[' + i + ']'].value = quantities[i];
-                checkQuantityTextbox(order_form['quantity[' + i + ']']);
             }
+            alert(params.get("errors"));
         }
     }
+
+        // if (params.has('quantity')) {
+        //     var quantities = JSON.parse(params.get('quantity')); //turns string in object
+        //     // put quantities in quantity textboxes
+        //     for (i in quantities) {
+        //         order_form['quantity[' + i + ']'].value = quantities[i];
+        //         checkQuantityTextbox(order_form['quantity[' + i + ']']);
+        //     }
+        // }
+    // }
 </script>
 
 <script>
@@ -96,23 +94,24 @@ Code referenced from assignment 1 examples.
 
     <body>
 
-        <form name="order_form" action="./process_form" method="POST">
-            <!-- the server is going to post the form to process_form -->
+        <form name="order_form" action="./add_to_cart" method="POST">
+            <!-- the server is going to post the form to add_to_cart -->
             <div>
                 <main>
                     <script>
                         //get products name, price, and image through loop
                         //make this in loop not to make the code complexed
+                        document.write(`<input type = "hidden" name="products_key" value="${products_key}">`);
                         for (i in products[products_key]) {
                             document.write(`
                     <section class="item">
                     <ul>
                     <h2><b>${products[products_key][i].name}</b></h2>
+                    <div class="img_wrap">
+                    <img src="./images/${products[products_key][i].image}"></div>
                     <p>$${products[products_key][i].price}</p>
                     <input type="text" placeholder="${products[products_key][i].quantity_available} Available" name="quantity[${i}]" onkeyup="checkQuantityTextbox(this);">
                     <div id="quantity[${i}]_errordiv"></div>
-                    <div class="img_wrap">
-                    <img src="./images/${products[products_key][i].image}"></div>
                     </ul>
                     </section>
                     `);
@@ -122,7 +121,7 @@ Code referenced from assignment 1 examples.
             </div>
 
             <!-- purchase button -->
-            <input type="submit" class="button" value="PURCHASE">
+            <input type="submit" class="button" value="Go to cart">
 
 
         </form>

@@ -47,7 +47,15 @@ Sources: My assignment 1, and w3 school.
     <div class="container signin">
       <p>You don't have an account yet? <a onclick="window.location.href = 'register.html';">Register</a></p>
     </div>
+    <div class="container signin">
+      <p>Continue Shopping? <a onclick="window.location.href = 'products_display.html';">Continue</a></p>
+    </div>
   </form>
+
+
+  <script>
+    document.write(`<div class="Keep shopping" style="color:black"><a href="index.html${location.search}"><br>Continue Shopping?</a></div>`)
+</script>
 
   <script>
     //check if the customers have wrong username or password, if there is and display alert message

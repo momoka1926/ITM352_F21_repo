@@ -22,6 +22,7 @@ Sources: My assignment 1, and bootdey.com.
     window.location.href = "./login.html";
   }
 
+  // If users is logging in and 
 </script>
 <!DOCTYPE html>
 <html lang="en">
@@ -63,7 +64,11 @@ Sources: My assignment 1, and bootdey.com.
                       <tbody>
                         <tr>
                           <td class="content-block">
-                            <h2>Your Receipt</h2>
+                            <h1>Your Receipt</h1>
+                            <script>
+                            document.write(`<h2><br>Thank you ${username} for purchasing with us at Fresh Jstore! 
+                              <br>We will send you an email to ${email} for confirmation.</h2>`)
+                            </script>
                           </td>
                         </tr>
 

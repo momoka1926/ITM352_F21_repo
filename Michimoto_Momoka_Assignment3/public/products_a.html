@@ -105,14 +105,14 @@ Code referenced from assignment 1 examples.
                         //make this in loop not to make the code complexed
                         for (i in products[products_key]) {
                             document.write(`
-                    <section class="item">
+                            <section class="item">
                     <ul>
                     <h2><b>${products[products_key][i].name}</b></h2>
+                    <div class="img_wrap">
+                    <img src="./images/${products[products_key][i].image}"></div>
                     <p>$${products[products_key][i].price}</p>
                     <input type="text" placeholder="${products[products_key][i].quantity_available} Available" name="quantity[${i}]" onkeyup="checkQuantityTextbox(this);">
                     <div id="quantity[${i}]_errordiv"></div>
-                    <div class="img_wrap">
-                    <img src="./images/${products[products_key][i].image}"></div>
                     </ul>
                     </section>
                     `);
