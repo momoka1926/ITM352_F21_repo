@@ -42,6 +42,7 @@
     }
   });
 
+
   // get the query string --> there is no query string so I need to fix this
   let params = (new URL(document.location)).searchParams;
   if (params.has('products_key')) {
@@ -116,8 +117,19 @@
                            
                        </tbody>
                      </table>
-                   
-                    <form action="/confirm" method=GET>
+                     <div style="border: solid thin">
+                      <br><b>
+                        Shipping Policy: All orders are processed within 2-3 business days.
+                        <br>Orders are not shipped or delivered on holidays.
+                        <br>
+                        <br>
+                        Return and Refund Policy: We will be happy to refund any product when accompanied by proof of
+                        purchase within 30 days of purchase.
+                        <br>
+                      </b>
+                    </div>
+                    
+                    <form action="/add_to_cart" method="POST">
                     <input type="submit" class="button" value="Check Out"></form>
 
                       <!-- navigation var to the home page -->

@@ -65,11 +65,11 @@ app.get("/products.js", function (request, response, next) {
 //get the body
 app.use(express.urlencoded({ extended: true }));
 
-//----------------CART-----------------------
+//----------------CART-----------------------//
 app.post("/add_to_cart", function (request, response) {
     let POST = request.body;
-    var products_key = request.body['products_key']; // get the product key sent from the form post
-    var erros = {}; // assume no errors
+    var products_key = POST['products_key']; // POST the products_key 
+    var errors = {}; // assume no errors
     var has_quantities = false; //assume no quantities
     var quantity_array = [];
 
@@ -90,9 +90,40 @@ app.post("/add_to_cart", function (request, response) {
          if(!has_quantities){
             errors['no_quantities'] = `Please select some items!`;
         }
-
     }
-    response.redirect('./cart.html');
+        //error message on an new line
+        if (Object.keys(errors).length > 0) {
+            var errorMessage = '';
+            for (err in errors) {
+                errorMessage += errors[err] + '\n';
+            }
+
+        let params = new URLSearchParams(request.body);
+        params.append('errorMessage', errorMessage);
+        response.redirect(`./products_display.html?${params.toString()}`);
+    } else {
+        // put quantities into cart
+        if (typeof request.session.cart == 'undefined') {
+            request.session.cart = {};
+        }
+        // adds the product key to the cart
+        for (let i in products[products_key]) {
+            if (typeof request.session.cart[products_key] == 'undefined') { 
+                request.session.cart[products_key] = []; 
+            }
+            quantity_requested = Number(POST['quantity' + i]);
+            // add quantities_requested to the existing value
+            if (typeof request.session.cart[products_key][i] != 'undefined') {
+                request.session.cart[products_key][i] += quantity_requested;
+            } else { 
+                request.session.cart[products_key][i] = quantity_requested;
+            }
+        }
+        console.log(request.session);
+    }
+    let params = new URLSearchParams(request.body);
+    params.append('products_key', products_key);
+    response.redirect(`./cart.html?${params.toString()}`);
 });
 
 app.post("/get_cart", function (request, response) {
@@ -100,7 +131,7 @@ app.post("/get_cart", function (request, response) {
 });
 
 
-//----------------LOGIN page-----------------
+//----------------LOGIN page----------------- //
 // borrowed from useful example for Assignment2 and also from Vo Tina (thanks!)
 app.post("/process_login", function (request, response) {
     var errors = {};
@@ -116,8 +147,8 @@ app.post("/process_login", function (request, response) {
             params.append('username' , username); //put username into params
             params.append('email' , user_data[username].email);
             //before purchase the products, the customer needs to login
-            // var user_info = {"username": username, "email": user_data[username].email};
-            // response.cookie('user_info', JSON.stringify(user_info), { maxAge: 10 * 60 * 1000 });
+            var user_info = {"username": username, "email": user_data[username].email};
+            response.cookie('user_info', JSON.stringify(user_info), { maxAge: 30 * 60 * 1000 }); // expires after 30 mins
     
             //after logged in, directly move to the invoice page
             response.redirect('./invoice.html?' + params.toString());
@@ -135,10 +166,10 @@ app.post("/process_login", function (request, response) {
     params.append('username' , username); //put username into params
     response.redirect(`./login.html?` + params.toString());
 });
-//----------------------------------------
 
 
-// -------------REGISTER page--------------
+
+// -------------REGISTER page-------------- //
 // borrowed from W3resource
 app.post("/register", function (request, response) {
     var reg_errors = {};
@@ -199,63 +230,52 @@ app.post("/register", function (request, response) {
         response.redirect(`./register.html?` + params.toString());
     }
 });
-//--------------------------
 
 
-//-----------LOGOUT---------------
+
+// -----------LOGOUT--------------- //
 app.get("/logout", function (request, response, next){
-
+    var user_info = JSON.parse(request.cookies['user_info']); //makes user_info into JSON
+    var username = user_info["username"];
+    // messages will show up after logout
+    logout_msg =  `<script>alert('${user_info.name} has successfully logged out!'); location.href="./index.html";</script>`;
+    response.clearCookie('user_info'); //destroys cookie
 });
 
 
-//-----------PURCHASE-------------
-//get the quantity data from the order form, then check it and 
-// copied from my assignment1 server.js and modified it to bring the customers to invoice page after they login 
-app.post('/process_form', function (request, response, next) {
-    var quantities = request.body["quantity"];
-    var quantity_available = 10;
-    var errors = {}; //assume no errors
-    let reqbody = request.body;
-    var has_quantities = false; //assume no quantities
-
-    // Check that quantities are non-negative integers
-    for (i in quantities) {
-        // check ith quantity
-        if (isNonNegInt(quantities[i]) == false) {
-            errors['quantity_' + i] = `Please choose a valid quantity for ${products[i].name}`;
+// -----------COMPLETE PURCHASE------------- //
+app.post('/completePurchase', function (request, response, next) {
+    var invoice = request.body; //save invoice data
+    var user_info = JSON.parse(request.cookies["user_info"]); //user_info into JSON
+    var the_email = user_info["email"]; //save users' email
+    var transporter = nodemailer.createTransport({
+        // sets up mail server
+        //security, only functions on UH network
+        host: "mail.hawaii.edu",
+        port: 25,
+        secure: false, // use TLS
+        tls: {
+            // do not fail on invalid certs
+            rejectUnauthorized: false
         }
-        // Check if any quanties were selected
-        if (quantities[i] > 0) {
-            has_quantities = true;
+    });
+
+    var mailOptions = {
+        from: 'momo2@jstore.com',
+        to: the_email,
+        subject: `Thanks, ${user_info.name} For Purchasing from Fresh JStore`, 
+        html: invoice.invoicehtml
+    };
+    transporter.sendMail(mailOptions, function (error, info) {
+        if (error) {
+            status_str = 'There was an error and your invoice could not be emailed :('; 
+        } else {
+            status_str = `Your invoice was mailed to ${the_email}`;
         }
-        // Check if quantity desired is avaialble
-        // if (quantities[i] > products[i].quantity_available) {
-        //     errors['quantity_available' + i] = `We don't have ${(quantities[i])} ${products[i].name} available. Sorry for inconvenience.`;
-        // }
-    }
-    // Check if quantity is selected
-    if (!has_quantities) {
-        errors['no_quantities'] = `Please select some items!`;
-    }
-
-
-    let qty_obj = { "quantity": JSON.stringify(quantities) };
-    // console.log(Object.keys(errors));
-    //ask if the object is empty or not
-    if (Object.keys(errors).length == 0) {
-        // remove from inventory quantities
-        for (i in products) {
-            products[products_key][i].quantity_available -= Number(quantities[i]);
-        }
-        // save quantity data for use later in invoice
-        qty_data = qty_obj;
-        response.redirect('./login.html');
-    } else { //if i have errors, take the errors and go back to products_display.html
-        let errs_obj = { "errors": JSON.stringify(errors) };
-        console.log(qs.stringify(qty_obj));
-        response.redirect('./products_display.html?' + qs.stringify(qty_obj) + '&' + qs.stringify(errs_obj));
-    }
-
+        response.json({ "status": status_str});
+    });
+    response.clearCookie('user_info'); //destroys cookie
+    request.session.destroy(); //delete the session, once email is sent
 });
 
 
@@ -273,49 +293,49 @@ function isNonNegInt(q, returnErrors = false) {
 //------------------
 
 
-//------Creating an invoice to both print and email------
-app.get("/checkout", function (request, response) {
-    // Generate HTML invoice string
-      var invoice_str = `Thank you for your order!<table border><th>Quantity</th><th>Item</th>`;
-      var shopping_cart = request.session.cart;
-      for(product_key in products) {
-        for(i=0; i<products[product_key].length; i++) {
-            if(typeof shopping_cart[product_key] == 'undefined') continue;
-            qty = shopping_cart[product_key][i];
-            if(qty > 0) {
-              invoice_str += `<tr><td>${qty}</td><td>${products[product_key][i].name}</td><tr>`;
-            }
-        }
-    }
-      invoice_str += '</table>';
-    // Set up mail server. Only will work on UH Network due to security restrictions
-      var transporter = nodemailer.createTransport({
-        host: "mail.hawaii.edu",
-        port: 25,
-        secure: false, // use TLS
-        tls: {
-          // do not fail on invalid certs
-          rejectUnauthorized: false
-        }
-      });
+// //------Creating an invoice to both print and email------
+// app.get("/checkout", function (request, response) {
+//     // Generate HTML invoice string
+//       var invoice_str = `Thank you for your order!<table border><th>Quantity</th><th>Item</th>`;
+//       var shopping_cart = request.session.cart;
+//       for(products_key in products) {
+//         for(i=0; i<products[products_key].length; i++) {
+//             if(typeof shopping_cart[products_key] == 'undefined') continue;
+//             qty = shopping_cart[products_key][i];
+//             if(qty > 0) {
+//               invoice_str += `<tr><td>${qty}</td><td>${products[products_key][i].name}</td><tr>`;
+//             }
+//         }
+//     }
+//       invoice_str += '</table>';
+//     // Set up mail server. Only will work on UH Network due to security restrictions
+//       var transporter = nodemailer.createTransport({
+//         host: "mail.hawaii.edu",
+//         port: 25,
+//         secure: false, // use TLS
+//         tls: {
+//           // do not fail on invalid certs
+//           rejectUnauthorized: false
+//         }
+//       });
     
-      var mailOptions = {
-        from: 'momo2@jstore.com',
-        to: user_email,
-        subject: 'Jstore invoice',
-        html: invoice_str
-      };
+//       var mailOptions = {
+//         from: 'momo2@jstore.com',
+//         to: user_email,
+//         subject: 'Jstore invoice',
+//         html: invoice_str
+//       };
     
-      transporter.sendMail(mailOptions, function(error, info){
-        if (error) {
-          invoice_str += '<br>There was an error and your invoice could not be emailed :(';
-        } else {
-          invoice_str += `<br>Your invoice was mailed to ${user_email}`;
-        }
-        response.send(invoice_str);
-      });
+//       transporter.sendMail(mailOptions, function(error, info){
+//         if (error) {
+//           invoice_str += '<br>There was an error and your invoice could not be emailed :(';
+//         } else {
+//           invoice_str += `<br>Your invoice was mailed to ${user_email}`;
+//         }
+//         response.send(invoice_str);
+//       });
      
-    });
+//     });
     
 // route all other GET requests to files in public 
 app.use(express.static('./public'));
