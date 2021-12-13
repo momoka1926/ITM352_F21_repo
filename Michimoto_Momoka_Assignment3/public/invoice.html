@@ -22,7 +22,22 @@ Sources: My assignment 1, and bootdey.com.
     window.location.href = "./login.html";
   }
 
-  // If users is logging in and 
+   // Referenced from Assignment 3 examples
+   var products_data;
+   var total = 0;
+  loadJSON('get_products_data', function (response) {
+    // Parsing JSON string into object
+    products_data = JSON.parse(response);
+  });
+
+  loadJSON('get_cart', function (response) {
+    // Parsing JSON string into object
+    shopping_cart = JSON.parse(response); // this is request.session.cart
+    for (pk in shopping_cart) {
+      total += shopping_cart[pk].reduce((a, b) => a + b);
+    }
+  });
+
 </script>
 <!DOCTYPE html>
 <html lang="en">
@@ -163,6 +178,7 @@ Sources: My assignment 1, and bootdey.com.
                         <br>
                       </b>
                     </div> -->
+                    <br>
                     <input type="button" class="button" value="Back to Home"
                       onclick="window.location.href = 'products_display.html';">
 

@@ -27,26 +27,17 @@ Code referenced from assignment 1 examples.
      // form was submitted so check that quantities are valid then redirect to invoice if ok.
         if (params.has('errors')) {
             var errors = JSON.parse(params.get('errors')); //turns string in object
-            for (i in products){
+            for (let i in products){
                 order_form['quantity[' + i + ']'].value = quantities[i];
             }
             alert(params.get("errors"));
         }
     }
 
-        // if (params.has('quantity')) {
-        //     var quantities = JSON.parse(params.get('quantity')); //turns string in object
-        //     // put quantities in quantity textboxes
-        //     for (i in quantities) {
-        //         order_form['quantity[' + i + ']'].value = quantities[i];
-        //         checkQuantityTextbox(order_form['quantity[' + i + ']']);
-        //     }
-        // }
-    // }
 </script>
 
 <script>
-    // Do i have products_key?
+    //get query string
     if (params.has('products_key')) {
         var products_key = params.get('products_key');
     } else {
@@ -73,10 +64,9 @@ Code referenced from assignment 1 examples.
         <nav>
             <ul class="main-nav" style="background-color:#fff">
                 <li><a href="./index.html">HOME</a></li>
-                <li><a href="./products_display.html">Seafoods</a></li>
-                <li><a href="./products_a.html">Alcohol</a></li>
-                <li><a href="./products_s.html">Sweets</a></li>
-                <li><a href="./products_p.html">Plates</a></li>
+                <script>
+                    nav_bar(products_key,products);
+                </script>
                 <li><a href="#about">ABOUT</a></li>
                 <li><a href="#contact">CONTACT</a></li>
             </ul>
@@ -91,6 +81,19 @@ Code referenced from assignment 1 examples.
     <!-- Menu Container -->
     <body>
 
+        <script>
+            var products_data;
+            var total = 0;
+            loadJSON('get_cart', function (response) {
+              // Parsing JSON string into object
+              shopping_cart = JSON.parse(response);
+              for (pk in shopping_cart) {
+                total += shopping_cart[pk].reduce((a, b) => a + b);
+              }
+            });
+            cart_total.innerHTML = total;
+          </script>
+          
         <form name="order_form" action="/add_to_cart" method="POST">
             <!-- the server is going to post the form to add_to_cart -->
             <div>
