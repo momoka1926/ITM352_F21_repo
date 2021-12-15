@@ -78,7 +78,8 @@ Descritpion:This page designed my order page.
   h3{
     font-family:Georgia, 'Times New Roman', Times, serif;
     font-size: 20px;
-    background-color: plum;
+    text-align: center;
+    background-color: rgba(242, 196, 242, 0.605);
     padding: 10px
   }
  

@@ -164,6 +164,7 @@ app.post("/update_cart", function (request, response) {
 // borrowed from useful example for Assignment2 and also from Vo Tina & Kam Chloe
 app.post("/process_login", function (request, response) {
     var errors = {};
+    var incorrectLogin_str = '';
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
     var login_username = request.body['username'].toLowerCase();
     var login_password = request.body['password'];
@@ -180,24 +181,16 @@ app.post("/process_login", function (request, response) {
             var user_info = { "username": login_username, "email": user_data[login_username].email };
             response.cookie('user_info', JSON.stringify(user_info), { maxAge: 30 * 60 * 1000 }); // expires in 30 mins
 
-            console.log(`Welcome ${request.session['username']}`);
-
             //then, go back to the products page
-            console.log(`${login_username} successfully logged in`);
             response.redirect('./products_display.html');
             return;
         } else {
-            // code from Kam Chloe
-            incorrectLogin_str = 'The password is incorrect.';
-            console.log(errors);
-            request.query.login_username = login_username;
-            request.query.name = user_data[login_username].name;
+            // if the password doesn't match,     
+            errors['login_err'] = 'Wrong Password';
         }
-
     } else {
-        incorrectLogin_str = 'The username does not exists or wrong.';
-        console.log(errors);
-        request.query.login_username = login_username;
+        // if the username doesn't exist
+        errors['login_err'] = 'Wrong Username';
     }
     //then go back to login with errors 
     response.redirect(`./login.html?loginMessage=${incorrectLogin_str}&wrong_pass=${login_username}`);
@@ -266,35 +259,36 @@ app.post("/register", function (request, response) {
 });
 
 
-
 // -----------LOGOUT--------------- //
+//Code referenced from Krizel Tominez and Chloe Kam
 app.get("/logout", function (request, response, next) {
     var user_info = JSON.parse(request.cookies['user_info']); //makes user_info into JSON
     var username = user_info["username"];
     // messages will show up after logout
-    logout_msg = `<script>alert('${user_info.name} has successfully logged out!'); location.href="./index.html";</script>`;
+    logout_msg = `<script>alert('${user_info['username']} has successfully logged out'); location.href="./index.html";</script>`;
     response.clearCookie('user_info'); //destroys cookie
+    response.send(logout_msg); // send a message after logout
 });
 
-//---------PURCHASE---------------//
+//---------COMPLETE PURCHASE---------------//
+// code referenced from Li Xinfei and modified
 app.post("/confirm", function (request, response) {
-    let username = request.cookies["login"]; //get username from cookies
-    console.log(req.cookies);
+    let username = request.cookies["user_info"]; //gets user info
+    console.log(request.cookies);
     // send user to login page
     if (typeof req.cookies["login"] == 'undefined') {
-        res.redirect(`./login.html`);
+        response.redirect(`./login.html`);
         return;
     }
-    //check errors
-    var errors = {};
+    var errors = {}; //assume no errors
     if (JSON.stringify(errors) === '{}') {
         //put their username and email in the URL/string
         let params = new URLSearchParams();
         params.append('username', username);
         params.append('email', user_data[username].email);
-        res.redirect(`./invoice.html?${params.toString()}`);
+        response.redirect(`./invoice.html?${params.toString()}`);
     } else { //if wrong,
-        res.redirect(`./cart.html`);
+        response.redirect(`./cart.html`);
     }
 });
 

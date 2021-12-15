@@ -54,7 +54,21 @@ Code referenced from assignment 1 examples.
       }
     }
 
-
+    function getCookie(cname) {
+  let name = cname + "=";
+  let decodedCookie = decodeURIComponent(document.cookie);
+  let ca = decodedCookie.split(';');
+  for(let i = 0; i <ca.length; i++) {
+    let c = ca[i];
+    while (c.charAt(0) == ' ') {
+      c = c.substring(1);
+    }
+    if (c.indexOf(name) == 0) {
+      return c.substring(name.length, c.length);
+    }
+  }
+  return "";
+}
 </script>
 
 <script>
@@ -64,7 +78,6 @@ Code referenced from assignment 1 examples.
     } else {
         var products_key = "seafoods";
     }
-
 </script>
 
 
@@ -74,17 +87,23 @@ Code referenced from assignment 1 examples.
 <head>
     <meta charset="UTF-8">
     <link rel="stylesheet" href="products-style.css">
-    <!-- <link rel="stylesheet" href="https://www.w3schools.com/w3css/4/w3.css"> -->
     <link rel="stylesheet" href="https://fonts.googleapis.com/css2?family=Zen+Antique+Soft&display=swap">
     <title>Fresh JStore</title>
 </head>
 
 <body>
+
+<script>
+    //change the string LOGIN to LOGOUT
+    window.onclick = function (){
+    document.getElementById("login").innerText = "LOGOUT";
+    };
+</script>
     <!-- Navbar (sit on top) -->
     <header class="page-header wrapper">
         <nav>
             <ul class="main-nav" style="background-color:#fff">
-                <li><a href="./login.html">login</a></li>
+                <li><a id="login" href="./login.html">login</a></li>
                 <li><a href="./index.html">HOME</a></li>
                 <script>
                     nav_bar(products_key, products);
@@ -97,10 +116,18 @@ Code referenced from assignment 1 examples.
     </header>
     <div class="home-content wrapper">
         <h2 class="page-title" style="background-color:#fff">Fresh JStore</h2>
-
     </div>
     </header>
 
+    <h3>
+        <script>
+        // if the user login, display a message
+        if (getCookie ('user_info') != false ){
+        var user_info = JSON.parse(getCookie('user_info'));
+        document.write(`🇯🇵Welcome aboard ${user_info['username']}🇯🇵`)
+    }
+        </script>
+    </h3>
     <!-- Menu Container -->
 
     <body>
