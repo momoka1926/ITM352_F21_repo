@@ -51,6 +51,9 @@ app.all('*', function (request, response, next) {
 
 // this returns the shopping cart for the current session
 app.post("/get_cart", function (request, response) {
+    if (typeof request.session.cart == 'undefined') {
+        request.session.cart = {};
+    }
     response.json(request.session.cart);
 });
 
@@ -70,7 +73,7 @@ app.post("/add_to_cart", function (request, response) {
     let POST = request.body;
     var products_key = POST['products_key']; // POST the products_key 
     var errors = {}; // assume no errors
-    // var has_quantities = false; //assume no quantities
+    var empty = true; //assume no quantities
     var quantity_array = [];
 
     for (let i in products[products_key]) {
@@ -86,12 +89,16 @@ app.post("/add_to_cart", function (request, response) {
             errors['quantity' + i] = `We don't have ${q} ${products[products_key][i].name} available. Sorry for inconvenience.`;
         }
 
-        //  //check if the quantity is selected
-        //  if(!has_quantities){
-        //     errors['no_quantities'] = `Please select some items!`;
-        // }
+        //check if the quantity is selected
+        if (q > 0) {
+            empty = false;
+            console.log("Quantities selected")
+        } else if ((typeof errors['invalid' + i] != 'undefined') && (typeof errors['quantity' + i] != 'undefined')) {
+            errors['empty'] = `Please put some quantities.`;
+        }
     }
-    //error message on  new line
+
+    //error message on new line
     if (Object.keys(errors).length > 0) {
         var errorMessage = '';
         for (err in errors) {
@@ -107,7 +114,7 @@ app.post("/add_to_cart", function (request, response) {
         if (typeof request.session.cart == 'undefined') {
             request.session.cart = {};
         }
-        // put these quantities for this products_key in the cart
+        // put these quantities for this products_key in the cart, and create a new
         if (typeof request.session.cart[products_key] == 'undefined') {
             request.session.cart[products_key] = [];
         }
@@ -129,30 +136,32 @@ app.post("/add_to_cart", function (request, response) {
 //-------------UPDATE CART-------------------//
 app.post("/update_cart", function (request, response) {
     //replace the shopping cart data
-    var update_cart = request.body.cart;
-    var errors = {}; //assume no errprs
+    var update_cart = request.body;
+    var errors = {}; //assume no errors
+    console.log(update_cart, request.session.cart);
 
+    // Check that the new quantities wanted are available/valid
     //if there is no errors
-    if (Object.keys(errors).length == 0){
-
-        request.session.cart = updated_cart;
-     
-        response.redirect("./shopping_cart.html"); // goes to shopping cart if correct
-    
-        }
-        else {
-            // make error message 
-            var errorMessage_str = '';
-            for (err in errors) {
-                errorMessage_str += errors[err] + '\n';
+    if (Object.keys(errors).length == 0) {
+        for (let pk in request.session.cart) {
+            for (let i in request.session.cart[pk]) {
+                if(typeof update_cart[`quantity_${pk}_${i}`] != 'undefined'){
+                // add/remove updated quantities from inventory
+                products[pk][i].quantity_available -= request.session.cart[pk][i];
+                // update cart
+                request.session.cart[pk][i] = Number(update_cart[`quantity_${pk}_${i}`]);
             }
-            response.redirect(`./products_display.html?${params.toString()}` ); //with sticky
         }
-    });
+    }
+    }
+    let params = new URLSearchParams(request.body);
+    params.append('errors', JSON.stringify(errors));
+    response.redirect("./cart.html?"); // goes to shopping cart if correct
+});
 
 
 //----------------LOGIN page----------------- //
-// borrowed from useful example for Assignment2 and also from Vo Tina (thanks!)
+// borrowed from useful example for Assignment2 and also from Vo Tina & Kam Chloe
 app.post("/process_login", function (request, response) {
     var errors = {};
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
@@ -160,34 +169,37 @@ app.post("/process_login", function (request, response) {
     var login_password = request.body['password'];
 
     // check if username exist, then check password entered match password stored
-    if (typeof user_data[username] != 'undefined') {
+    if (typeof user_data[login_username] != 'undefined') {
         // take "password" and check if the password in the textbox is right
-        if (user_data[username].password == request.body['password']) {
+        if (user_data[login_username].password == request.body['password']) {
             // store username, email, and full name in the session
             request.session['username'] = login_username; // username
             request.session['email'] = user_data[login_username]['email']; // email
             request.session['fullname'] = user_data[login_username]['fullname']; //fullname
 
-            var user_info = { "username": username, "email": user_data[username].email };
+            var user_info = { "username": login_username, "email": user_data[login_username].email };
             response.cookie('user_info', JSON.stringify(user_info), { maxAge: 30 * 60 * 1000 }); // expires in 30 mins
 
+            console.log(`Welcome ${request.session['username']}`);
+
             //then, go back to the products page
-            response.redirect('./products_display.html?'+ stringify(request.query));
+            console.log(`${login_username} successfully logged in`);
+            response.redirect('./products_display.html');
             return;
         } else {
+            // code from Kam Chloe
             incorrectLogin_str = 'The password is incorrect.';
             console.log(errors);
             request.query.login_username = login_username;
             request.query.name = user_data[login_username].name;
         }
 
-        } else {
-            incorrectLogin_str = 'The username does not exists or wrong.';
-            console.log(errors);
-            request.query.login_username = login_username;
-        }
+    } else {
+        incorrectLogin_str = 'The username does not exists or wrong.';
+        console.log(errors);
+        request.query.login_username = login_username;
+    }
     //then go back to login with errors (sticky)
-    //shows error messages
     response.redirect(`./login.html?loginMessage=${incorrectLogin_str}&wrong_pass=${login_username}`);
 });
 
@@ -196,8 +208,8 @@ app.post("/process_login", function (request, response) {
 // -------------REGISTER page-------------- //
 // borrowed from W3resource
 app.post("/register", function (request, response) {
+    console.log(request.body);
     var reg_errors = {};
-
     // check username 
     var reg_username = request.body['username'].toLowerCase();
     // only letters and numbers, at least 4 but less than 10, 
@@ -229,28 +241,26 @@ app.post("/register", function (request, response) {
     }
 
 
-    //borrowed from Assignment 2 useful example
+    //borrowed from Assignment 2 useful example, Li Xinfei
     //save the information to user_data.json
     if (Object.keys(reg_errors).length == 0) {
+        var username = request.body['username'].toLowerCase();
         user_data[reg_username] = {};
         user_data[reg_username].name = request.body.name;
         user_data[reg_username].password = request.body.password;
         user_data[reg_username].email = request.body.email;
         // save updated user_data obj to file
         fs.writeFileSync(filename, JSON.stringify(user_data));
-
-        let params = new URLSearchParams(qty_data); // put saved qty data into query
-        params.append('username', request.body.username); //put username into query
-        params.append('email', user_data[reg_username].email);
-        //directly move to the invoice page
+        // send cookies after the user registers for an account
+        response.cookie('login', username, { maxAge: 30 * 60 * 1000 }); // expire in 30 mins
+        response.cookie('email', username.email);
+        //directly move to the invoice page to purchase
         response.redirect('./invoice.html?' + params.toString());
         return;
     } else {
-        //then go back to register page with errors
+        //go back to register page with errors
         let errs_obj = { "reg_errors": JSON.stringify(reg_errors) };
         let params = new URLSearchParams(errs_obj);
-        params.append('reg_data', JSON.stringify(request.body)); //put reg data into params
-        params.append('username', request.body.username); //put username into params
         response.redirect(`./register.html?` + params.toString());
     }
 });
@@ -266,9 +276,30 @@ app.get("/logout", function (request, response, next) {
     response.clearCookie('user_info'); //destroys cookie
 });
 
+//---------PURCHASE---------------//
+app.post("/confirm", function (request, response) {
+    let username = request.cookies["login"]; //get username from cookies
+    console.log(req.cookies);
+    // send user to login page
+    if (typeof req.cookies["login"] == 'undefined') {
+        res.redirect(`./login.html`);
+        return;
+    }
+    //check errors
+    var errors = {};
+    if (JSON.stringify(errors) === '{}') {
+        //put their username and email in the URL/string
+        let params = new URLSearchParams();
+        params.append('username', username);
+        params.append('email', user_data[username].email);
+        res.redirect(`./invoice.html?${params.toString()}`);
+    } else { //if wrong,
+        res.redirect(`./cart.html`);
+    }
+});
 
-// -----------COMPLETE PURCHASE------------- //
-app.post('/completePurchase', function (request, response, next) {
+// -----------COMPLETE PURCHASE and EMAIL------------- //
+app.post('/complete_purchase', function (request, response, next) {
     var invoice = request.body; //save invoice data
     var user_info = JSON.parse(request.cookies["user_info"]); //user_info into JSON
     var the_email = user_info["email"]; //save users' email

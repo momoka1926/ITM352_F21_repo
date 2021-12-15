@@ -34,8 +34,23 @@
     loadJSON('get_cart', function (response) {
       // Parsing JSON string into object
       shopping_cart = JSON.parse(response);
+      for (pk in shopping_cart) {
+      total += shopping_cart[pk].reduce((a, b) => a + b);
+    }
     });
+    let params = (new URL(document.location)).searchParams; // get the query string which has the form data
+    window.onload = () => {
+      if(params.has('errors')){
+        var errors = params.get('errors');
+        if(Object.keys(errors)==0) {
+          alert('Your items have been added to your shopping cart');
+        } else{
+          // alrt about erros and indicate where the errors are
+          alert('There were erros. Your items have not been added to your shopping cart');
+        }
+      }
 
+    }
 
 
   </script>
@@ -45,7 +60,7 @@
 <!-- used template from bootdey.com  -->
 
 <body>
-  <form class="register" action="./register" method="POST">
+  <form class="register" action="./update_cart" method="POST">
     <table class="body-wrap">
       <tbody>
         <tr>
@@ -69,17 +84,19 @@
                               <tbody>
                                 <tr>
                                   <th style="text-align: center;" width="43%">Item</th>
+                                  <th style="text-align: center;" width="43%">Name</th>
                                   <th style="text-align: center;" width="11%">quantity</th>
                                   <th style="text-align: center;" width="13%">price</th>
                                   <th style="text-align: center;" width="54%">extended price</th>
                                 </tr>
-                                
+
                                 <script>
                                   subtotal = 0
                                   // loop through shoppping cart to display
                                   for (let pk in shopping_cart) {
                                     let quantities = shopping_cart[pk];
                                     for (let i in quantities) {
+                                      // if the quantity is greater than 0, compute
                                       if (quantities[i] > 0) {
                                         // product row
                                         extended_price = quantities[i] * products[pk][i].price
@@ -87,8 +104,12 @@
                                         document.write(`
             <tr>
               
-              <td width="43%">${products[pk][i].name}</td>
-              <td align="center" width="11%"><input type="number" name="${quantities[i]} min="0" ></td>
+              <td><img src="./images/${products[pk][i].image}" width="100%>"</td>
+              <td width="43%">${products[pk][i].name}
+              <td align="center" width="11%">
+                <input type = "number" id="quantity_${pk}_${i}" name="quantity_${pk}_${i}" value="${quantities[i]}" min="0" max="${products[pk][i].quantity_available
+            }">
+            </td>
               <td width="13%">\$${products[pk][i].price}</td>
               <td style="text-align: center;" colspan="3" width="67%">\$${extended_price.toFixed(2)}</td>
             </tr>
@@ -150,7 +171,9 @@
                               </tbody>
                         </tbody>
                       </table>
+                      
                       <p><input type="submit" value="Update Cart"></p>
+                      </form>
                       <div style="border: solid thin">
                         <br><b>
                           Shipping Policy: All orders are processed within 2-3 business days.
@@ -163,8 +186,8 @@
                         </b>
                       </div>
                       <br>
-                      <form action="./invoice.html" method="POST">
-                        <input type="submit" class="button" value="Check Out">
+                      <form action="/confirm" method="POST">
+                        <input type="submit" class="button" value="Check Out" onclick="location.href='invoice.html';">
                       </form>
 
                       <!-- navigation var to the home page -->
