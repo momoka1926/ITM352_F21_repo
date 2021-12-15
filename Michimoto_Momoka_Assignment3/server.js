@@ -199,7 +199,7 @@ app.post("/process_login", function (request, response) {
         console.log(errors);
         request.query.login_username = login_username;
     }
-    //then go back to login with errors (sticky)
+    //then go back to login with errors 
     response.redirect(`./login.html?loginMessage=${incorrectLogin_str}&wrong_pass=${login_username}`);
 });
 
