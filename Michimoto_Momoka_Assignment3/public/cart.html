@@ -1,7 +1,8 @@
 <!-- 
     Author: Momoka Michimoto
-    
-    Referenced code from Assignment 3 examples
+    Description: This file makes the shopping cart.  
+    Reference: Assignment 3 examples, bootdey.com.
+    Professor Port helped me out.
 -->
 
 
@@ -183,12 +184,15 @@
                           Return and Refund Policy: We will be happy to refund any product when accompanied by proof of
                           purchase within 30 days of purchase.
                           <br>
+                          <br>
+                          If you accept these, please go ahead checking out your order.
+                          <br>
                         </b>
                       </div>
                       <br>
-                      <form action="/confirm" method="POST">
-                        <input type="submit" class="button" value="Check Out" onclick="location.href='invoice.html';">
-                      </form>
+                      
+                        <input type="button" class="button" value="Check Out" name ="confirm_purchase" onclick= "location.href='./invoice.html';">
+                      
 
                       <!-- navigation var to the home page -->
                       <script>

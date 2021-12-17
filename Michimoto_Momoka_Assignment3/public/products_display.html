@@ -1,7 +1,8 @@
 <!-- 
-Momoka Michimoto
-This page creates foundation of my order page.
-Code referenced from assignment 1 examples.
+Author: Momoka Michimoto
+Description: This page creates foundation of my order page.
+Reference: Code referenced from assignment 1 examples, my assignment 2.
+Professor Port helped me out nav bar things.
 -->
 
 <script src="/products.js" type="text/javascript"></script>
@@ -32,6 +33,7 @@ Code referenced from assignment 1 examples.
             }
             alert(params.get("errors"));
         }
+    
 
 
         // gets the shopping cart from the server and compute how many items in there
@@ -95,15 +97,13 @@ Code referenced from assignment 1 examples.
 
 <script>
     //change the string LOGIN to LOGOUT
-    window.onclick = function (){
-    document.getElementById("login").innerText = "LOGOUT";
-    };
+   
 </script>
     <!-- Navbar (sit on top) -->
     <header class="page-header wrapper">
         <nav>
             <ul class="main-nav" style="background-color:#fff">
-                <li><a id="login" href="./login.html">login</a></li>
+                <li><a id="login_nav" href="./login.html">login</a></li>          
                 <li><a href="./index.html">HOME</a></li>
                 <script>
                     nav_bar(products_key, products);
@@ -124,7 +124,13 @@ Code referenced from assignment 1 examples.
         // if the user login, display a message
         if (getCookie ('user_info') != false ){
         var user_info = JSON.parse(getCookie('user_info'));
-        document.write(`🇯🇵Welcome aboard ${user_info['username']}🇯🇵`)
+        document.write(`🇯🇵 Welcome aboard ${user_info['username']} 🇯🇵`);
+        login_nav.innerHTML = "LOGOUT";
+        login_nav.href = '';
+        login_nav.onclick = function() {
+            document.cookie = "user_info=; expires=Thu, 01 Jan 1970 00:00:00 UTC; path=/;";
+        }
+
     }
         </script>
     </h3>

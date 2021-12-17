@@ -1,9 +1,9 @@
 /* 
 Author: Momoka Michimoto
-Description: This makes the server. Also checking if the customer enter the valid quantity.
+Description: This makes the server. Checking the process of login, register, update cart, send an invoice via email, set cookies.
 Sources: Assignment1, Lab13, Lab14 Ex4, W3resource, Assignment1_MVC_server, Assignment 2 code example and Assignment 3 code example.
 Professor Port helped me some codes.
-Got some tips from classmates.  (Vo Tina)
+Got some tips from classmates.  
 */
 
 
@@ -25,9 +25,15 @@ app.use(session({ secret: "MySecretKey", resave: true, saveUninitialized: true }
 
 //get cookie
 var cookieParser = require('cookie-parser');
+app.use(cookieParser());
 
+// parses URL posted data to request.body
 app.use(express.urlencoded({ extended: true }));
+// parse json posted data to request.biody
+app.use(express.json());
 
+//node mailer
+var nodemailer = require('nodemailer');
 
 //not to delete the data which customers entered in order page, to bring exact the same data to invoice
 var qty_data = {};
@@ -147,7 +153,7 @@ app.post("/update_cart", function (request, response) {
             for (let i in request.session.cart[pk]) {
                 if(typeof update_cart[`quantity_${pk}_${i}`] != 'undefined'){
                 // add/remove updated quantities from inventory
-                products[pk][i].quantity_available -= request.session.cart[pk][i];
+                request.session.cart[pk][i].quantity_available -= request.session.cart[pk][i];
                 // update cart
                 request.session.cart[pk][i] = Number(update_cart[`quantity_${pk}_${i}`]);
             }
@@ -163,8 +169,8 @@ app.post("/update_cart", function (request, response) {
 //----------------LOGIN page----------------- //
 // borrowed from useful example for Assignment2 and also from Vo Tina & Kam Chloe
 app.post("/process_login", function (request, response) {
+
     var errors = {};
-    var incorrectLogin_str = '';
     // Process login form POST and redirect to logged in page if ok, back to login page if not 
     var login_username = request.body['username'].toLowerCase();
     var login_password = request.body['password'];
@@ -173,11 +179,6 @@ app.post("/process_login", function (request, response) {
     if (typeof user_data[login_username] != 'undefined') {
         // take "password" and check if the password in the textbox is right
         if (user_data[login_username].password == request.body['password']) {
-            // store username, email, and full name in the session
-            request.session['username'] = login_username; // username
-            request.session['email'] = user_data[login_username]['email']; // email
-            request.session['fullname'] = user_data[login_username]['fullname']; //fullname
-
             var user_info = { "username": login_username, "email": user_data[login_username].email };
             response.cookie('user_info', JSON.stringify(user_info), { maxAge: 30 * 60 * 1000 }); // expires in 30 mins
 
@@ -186,14 +187,17 @@ app.post("/process_login", function (request, response) {
             return;
         } else {
             // if the password doesn't match,     
-            errors['login_err'] = 'Wrong Password';
+            errors['password_error'] = '<font color="red"><br>Wrong Password</font>';
         }
     } else {
         // if the username doesn't exist
-        errors['login_err'] = 'Wrong Username';
+        errors['username_error'] = '<font color="red"><br>Wrong Username</font>';
     }
     //then go back to login with errors 
-    response.redirect(`./login.html?loginMessage=${incorrectLogin_str}&wrong_pass=${login_username}`);
+    let params = new URLSearchParams(errors);
+    params.append('username', login_username);
+
+    response.redirect(`./login.html?${params.toString()}`);
 });
 
 
@@ -202,6 +206,7 @@ app.post("/process_login", function (request, response) {
 // borrowed from W3resource
 app.post("/register", function (request, response) {
     console.log(request.body);
+    let params = new URLSearchParams(request.query);
     var reg_errors = {};
     // check username 
     var reg_username = request.body['username'].toLowerCase();
@@ -248,7 +253,7 @@ app.post("/register", function (request, response) {
         response.cookie('login', username, { maxAge: 30 * 60 * 1000 }); // expire in 30 mins
         response.cookie('email', username.email);
         //directly move to the invoice page to purchase
-        response.redirect('./invoice.html?' + params.toString());
+        response.redirect('./products_display.html?' + params.toString());
         return;
     } else {
         //go back to register page with errors
@@ -270,34 +275,31 @@ app.get("/logout", function (request, response, next) {
     response.send(logout_msg); // send a message after logout
 });
 
-//---------COMPLETE PURCHASE---------------//
-// code referenced from Li Xinfei and modified
-app.post("/confirm", function (request, response) {
-    let username = request.cookies["user_info"]; //gets user info
-    console.log(request.cookies);
-    // send user to login page
-    if (typeof req.cookies["login"] == 'undefined') {
-        response.redirect(`./login.html`);
-        return;
-    }
-    var errors = {}; //assume no errors
-    if (JSON.stringify(errors) === '{}') {
-        //put their username and email in the URL/string
-        let params = new URLSearchParams();
-        params.append('username', username);
-        params.append('email', user_data[username].email);
-        response.redirect(`./invoice.html?${params.toString()}`);
-    } else { //if wrong,
-        response.redirect(`./cart.html`);
-    }
-});
+//---------CONFIRM PURCHASE---------------//
+// code referenced from Assignment 3 Examples, Nicole Tommie and modified
+app.post("/confirm_purchase", async function (request, response) {
 
-// -----------COMPLETE PURCHASE and EMAIL------------- //
-app.post('/complete_purchase', function (request, response, next) {
-    var invoice = request.body; //save invoice data
-    var user_info = JSON.parse(request.cookies["user_info"]); //user_info into JSON
-    var the_email = user_info["email"]; //save users' email
-    var transporter = nodemailer.createTransport({
+    var invoice_HTML = request.body['invoice_HTML'];
+    // clean javascript out of invoice_HTML
+    
+    // Remove back to Home button
+
+
+    var errors = {};
+    // if the cart is empty, don't let them to purchase
+    errors['emptycart'] = 'Your cart is empty. Please enter some quantities.';
+  
+    // send users to the login page if they don't log in yet
+    if (typeof request.cookies['user_info'] == 'undefined') {
+        response.redirect("./login.html");
+        return;
+    } 
+    var user_info = JSON.parse(request.cookies['user_info']); // take JSON strings nd make it object
+    
+
+    // ------------ and send an EMAIL --------------//
+    var username = user_info["username"]; //user_info into JSON
+    var transporter = nodemailer.createTransport({ 
         // sets up mail server
         //security, only functions on UH network
         host: "mail.hawaii.edu",
@@ -309,22 +311,24 @@ app.post('/complete_purchase', function (request, response, next) {
         }
     });
 
+    var userEmail = user_info["email"]; 
     var mailOptions = {
         from: 'momo2@jstore.com',
-        to: the_email,
-        subject: `Thanks, ${user_info.name} For Purchasing from Fresh JStore`,
-        html: invoice.invoicehtml
-    };
-    transporter.sendMail(mailOptions, function (error, info) {
+        to: userEmail,
+        subject: `Thanks, ${user_data.name} For Purchasing from Fresh JStore`,
+        html: invoice_HTML
+    }
+    var status_str ='';
+    
+    await transporter.sendMail(mailOptions, function (error, info) {
         if (error) {
             status_str = 'There was an error and your invoice could not be emailed :(';
         } else {
-            status_str = `Your invoice was mailed to ${the_email}`;
+            status_str = `Your invoice was mailed to ${userEmail}`;
         }
-        response.json({ "status": status_str });
+       response.json({"status": status_str}); 
     });
-    response.clearCookie('user_info'); //destroys cookie
-    request.session.destroy(); //delete the session, once email is sent
+
 });
 
 
